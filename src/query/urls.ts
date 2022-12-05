@@ -1,5 +1,3 @@
-import axios from "axios";
-
 export const BASE_URL = `http://13.125.244.117:8080`;
 export const TOKEN_CONTROLLER = `${BASE_URL}/api/every/token/get-token`; //토큰 조회
 export const GET_AUTH = `${BASE_URL}/api/member/auth/get-auth`; //인증 여부 조회
@@ -16,9 +14,3 @@ export const CREATE_DIET =
   `${BASE_URL}/api/member/diet/create-diet`;
 export const LIST_DIET = `${BASE_URL}/api/member/diet/list-diet`; //식단 정보 목록 조회
 export const PRODUCT_LIST = `${BASE_URL}/api/member/product/list-product`;
-
-// 카카오 토큰으로 DoobiToken 발급
-export const getDoobiToken = async (kakaoAccessToken: string) => {
-  const result = await axios.get(`${TOKEN_CONTROLLER}/${kakaoAccessToken}`);
-  return result.data;
-};
