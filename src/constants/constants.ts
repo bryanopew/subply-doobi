@@ -1,23 +1,70 @@
-export const BASE_URL = `http://13.125.244.117:8080`;
-export const KAKAO_TOKEN_CONTROLLER = `${BASE_URL}/api/every/token/get-token`; //토큰 조회
-export const GET_AUTH = `${BASE_URL}/api/member/auth/get-auth`; //인증 여부 조회
-export const RE_ISSUE_TOKEN = `${BASE_URL}/api/member/auth/re-issue-token`;
-export const GET_USER = `${BASE_URL}/api/member/user/get-user`; //사용자 정보 조회
-export const CREATE_BASE_LINE =
-  //기본 정보 생성
-  `${BASE_URL}/api/member/baseline/create-base-line`;
-export const GET_BASE_LINE =
-  //기본 정보 조회
-  `${BASE_URL}/api/member/baseline/get-base-line`;
-export const CREATE_DIET =
-  //식단정보생성
-  `${BASE_URL}/api/member/diet/create-diet`;
-export const LIST_DIET = `${BASE_URL}/api/member/diet/list-diet`; //식단 정보 목록 조회
-export const PRODUCT_LIST = `${BASE_URL}/api/member/product/list-product`;
+import { Dimensions, Platform } from "react-native";
+
+// RN constants
+export const { width, height } = Dimensions.get("screen");
+export const SCREENWIDTH = Math.min(width, height);
+export const SCREENHEIGHT = Math.max(width, height);
+
+export const IS_ANDROID = Platform.OS === "android";
+export const IS_IOS = Platform.OS === "ios";
+
+// Doobi server category etc.
 export const DIET_PURPOSE_CD = {
   1: "SP002001",
   2: "SP002002",
   3: "SP002003",
   4: "SP002004",
   5: "SP002005",
+};
+export const purposeCategory = [
+  { label: "다이어트(한 달 1~2kg감량)", value: "SP002001" },
+  { label: "다이어트(한 달 3~4kg감량)", value: "SP002002" },
+  { label: "체중유지", value: "SP002003" },
+  { label: "체중증가(한 달 1~2kg증량) ", value: "SP002004" },
+  { label: "체중증가(한 달 3~4kg증량)", value: "SP002005" },
+];
+export const weightTrainingCategrory = [
+  { label: "하루 30분 이하", value: "SP003001" },
+  { label: "하루 30분~1시간 이하", value: "SP003002" },
+  { label: "하루 1시간~1시간30분이하", value: "SP003003" },
+  { label: "하루 1시간30분~2시간 이하", value: "SP003004" },
+  { label: "하루 2시간 이상", value: "SP003005" },
+];
+export const aerobicTrainingCategrory = [
+  { label: "하루 30분 이하", value: "SP004001" },
+  { label: "하루 30분~1시간 이하", value: "SP004002" },
+  { label: "하루 1시간~1시간30분이하", value: "SP004003" },
+  { label: "하루 1시간30분~2시간 이하", value: "SP004004" },
+  { label: "하루 2시간 이상", value: "SP004005" },
+];
+
+// validationRules
+export const validationRules = {
+  age: {
+    required: "필수 정보입니다",
+    maxLength: 3,
+    validate: {
+      range: (v: string) =>
+        (parseInt(v) >= 10 && parseInt(v) <= 100) ||
+        "10~100세 안으로 입력해주세요",
+    },
+  },
+  height: {
+    required: "필수 정보입니다",
+    maxLength: 3,
+    validate: {
+      range: (v: string) =>
+        (parseInt(v) >= 120 && parseInt(v) <= 230) ||
+        "정확한 신장을 입력해주세요",
+    },
+  },
+  weight: {
+    required: "필수 정보입니다",
+    maxLength: 3,
+    validate: {
+      range: (v: string) =>
+        (parseInt(v) >= 30 && parseInt(v) <= 130) ||
+        "정확한 몸무게를 입력해주세요",
+    },
+  },
 };

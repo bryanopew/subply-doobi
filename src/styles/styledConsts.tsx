@@ -1,18 +1,22 @@
 import styled from "styled-components/native";
 import colors from "./colors";
 import { Dimensions } from "react-native";
+import { SCREENWIDTH } from "~/constants/constants";
 
-const { width: SCREENWIDTH } = Dimensions.get("window");
-
-interface StyledProps {
+export interface StyledProps {
   isActivated?: boolean;
   btnStyle?: string;
   width?: number;
   height?: number;
 }
 
+export const Container = styled.View`
+  flex: 1;
+  padding: 0px 16px 0px 16px;
+  background-color: ${colors.white};
+`;
+
 export const InputHeaderText = styled.Text`
-  margin-top: 24px;
   font-size: 14px;
   font-weight: normal;
   color: ${({ isActivated }: StyledProps) =>
@@ -23,6 +27,7 @@ export const UserInfoTextInput = styled.TextInput`
   align-items: flex-start;
   font-weight: normal;
   font-size: 16px;
+  padding-bottom: 10px;
   border-bottom-width: 1px;
   border-color: ${({ isActivated }: StyledProps) =>
     isActivated ? colors.main : colors.inActivated};
@@ -31,17 +36,17 @@ export const UserInfoTextInput = styled.TextInput`
 export const ErrorText = styled.Text`
   font-size: 16px;
   color: #ffffff;
-  margin-left: 10px;
 `;
 export const ErrorBox = styled.View`
   position: relative;
+  width: auto;
+  height: 24px;
   margin-top: 4px;
   margin-bottom: -28px;
+  padding: 0px 10px 0px 10px;
   background-color: ${colors.warning};
   border-radius: 3px;
-  width: 288px;
   align-self: flex-end;
-  height: 24px;
   opacity: 0.8;
 `;
 

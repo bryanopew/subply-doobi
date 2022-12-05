@@ -50,30 +50,38 @@ interface NavigationProps {
 }
 
 const Login = ({ navigation: { navigate } }: NavigationProps) => {
-  const signInWithKakao = async (): Promise<void> => {
-    // TBD: 로그인 정보 있으면 바로 메인페이지로 이동시키기
-    // TBD: ios 로그인 설정
+  // 실제 로그인. 테스트때만 주석처리
+  // const signInWithKakao = async (): Promise<void> => {
+  //   // TBD: 로그인 정보 있으면 바로 메인페이지로 이동시키기
+  //   // TBD: ios 로그인 설정
 
-    const token: KakaoOAuthToken = await login();
-    const kakaoAccessToken = token.accessToken;
-    // setResult(JSON.stringify(token));
-    console.log("signInWithKakao: login start");
-    const { accessToken, refreshToken } = await getDoobiToken(kakaoAccessToken);
-    if (accessToken && refreshToken) {
-      storeAccessToken(accessToken);
-      storeRefreshToken(refreshToken);
-      navigate("BottomTab", { screen: "Home" });
-    } else {
-      console.log("토큰발급 오류");
-    }
+  //   const token: KakaoOAuthToken = await login();
+  //   const kakaoAccessToken = token.accessToken;
 
-    // 메인페이지 이동
-  };
+  //   console.log("signInWithKakao: login!");
+  //   console.log(kakaoAccessToken);
+
+  //   const { accessToken, refreshToken } = await getDoobiToken(kakaoAccessToken);
+  //   if (accessToken && refreshToken) {
+  //     await storeAccessToken(accessToken);
+  //     await storeRefreshToken(refreshToken);
+  //     navigate("Stacks", { screen: "UserInfo1" });
+  //   } else {
+  //     console.log("토큰발급 오류");
+  //   }
+
+  //   // 메인페이지 이동
+  // };
+
   return (
     <Container>
       <Box>
         <TitleText>{"식단조절은\n두비에게"}</TitleText>
-        <BtnKakaoLogin btnStyle="kakao" onPress={signInWithKakao}>
+        {/* <BtnKakaoLogin btnStyle="kakao" onPress={signInWithKakao}> */}
+        <BtnKakaoLogin
+          btnStyle="kakao"
+          onPress={() => navigate("Stacks", { screen: "UserInfo1" })}
+        >
           <BtnTextKakao>카카오 로그인</BtnTextKakao>
         </BtnKakaoLogin>
       </Box>

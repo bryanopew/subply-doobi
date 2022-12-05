@@ -5,9 +5,13 @@ import { TOKEN_CONTROLLER } from "./urls";
 // doobi server------------------ //
 // 카카오 토큰으로 DoobiToken 발급
 export const getDoobiToken = async (kakaoAccessToken: string) => {
-  const result = await axios.get(`${TOKEN_CONTROLLER}/${kakaoAccessToken}`);
-  console.log(result.status);
-  return result?.status === 200 ? result.data : undefined;
+  try {
+    const result = await axios.get(`${TOKEN_CONTROLLER}/${kakaoAccessToken}`);
+    console.log(result.status);
+    return result?.status === 200 ? result.data : undefined;
+  } catch (e) {
+    console.log("getDoobiToken: ", e);
+  }
 };
 
 // async ------------------------ //
