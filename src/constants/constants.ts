@@ -54,7 +54,7 @@ export const validationRules = {
     maxLength: 3,
     validate: {
       range: (v: string) =>
-        (parseInt(v) >= 120 && parseInt(v) <= 230) ||
+        (parseFloat(v) >= 120 && parseFloat(v) <= 230) ||
         "정확한 신장을 입력해주세요",
     },
   },
@@ -67,4 +67,22 @@ export const validationRules = {
         "정확한 몸무게를 입력해주세요",
     },
   },
+  bmrKnown: {
+    maxlength: 4,
+    validate: {
+      range: (v: string) =>
+        (parseFloat(v) >= 500 && parseFloat(v) <= 3000) ||
+        v === "" ||
+        "정확한 기초대사량을 입력해주세요",
+    },
+  },
 };
+
+// type
+// TBD | react navigation ts 적용 아직 모름
+export interface NavigationProps {
+  navigation: {
+    navigate: Function;
+  };
+  route?: any;
+}

@@ -14,10 +14,36 @@ import {
   UserInfoTextInput,
   VerticalSpace,
 } from "~/styles/styledConsts";
-import { purposeCategory, validationRules } from "~/constants/constants";
+import {
+  NavigationProps,
+  purposeCategory,
+  validationRules,
+} from "~/constants/constants";
 import colors from "~/styles/colors";
 import Dropdown from "~/components/userInfoComp/Dropdown";
 import { Controller, useForm, useWatch } from "react-hook-form";
+import { calculateBMR } from "~/util/targetCalculation";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "~/redux/store";
+import { saveUserInfo } from "~/redux/slices/userInfo/userInfoSlice";
+
+interface IFormData {
+  gender: string;
+  age: string;
+  height: string;
+  weight: string;
+  dietPurposecd: string;
+}
+
+interface IDropdownField {
+  field: {
+    onChange: () => void;
+    onBlur: () => void;
+    value: string;
+  };
+}
+// { field: { onChange, onBlur, value } },
+// handleSubmit
 
 const Title = styled(TextMain)`
   font-size: 24px;
@@ -48,8 +74,9 @@ const InputHeader = styled(InputHeaderText)`
 const Input = styled(UserInfoTextInput)``;
 
 const renderAgeInput = (
-  { field: { onChange, onBlur, value } },
-  handleSubmit
+  { field: { onChange, value } }: IDropdownField,
+  handleSubmit: Function,
+  userInfo1Refs?: React.MutableRefObject<any[]>
 ) => {
   // const onSubmit = (data) => console.log("dddd", data);
   return (
@@ -59,16 +86,24 @@ const renderAgeInput = (
         placeholder="만 나이를 입력해주세요"
         value={value}
         onChangeText={onChange}
-        onFocus={handleSubmit()}
+        onFocus={() => handleSubmit()()}
+        isActivated={value ? true : false}
         keyboardType="numeric"
         maxLength={3}
+        ref={(el) => {
+          userInfo1Refs ? (userInfo1Refs.current[0] = el) : null;
+        }}
+        onSubmitEditing={() => {
+          userInfo1Refs?.current[1].focus();
+        }}
       />
     </>
   );
 };
 const renderHeightInput = (
-  { field: { onChange, onBlur, value } },
-  handleSubmit
+  { field: { onChange, onBlur, value } }: IDropdownField,
+  handleSubmit: Function,
+  userInfo1Refs?: React.MutableRefObject<any[]>
 ) => {
   // const onSubmit = (data) => console.log("dddd", data);
   return (
@@ -78,16 +113,25 @@ const renderHeightInput = (
         placeholder="신장을 입력해주세요"
         value={value}
         onChangeText={onChange}
-        onFocus={handleSubmit()}
+        onFocus={() => handleSubmit()()}
+        isActivated={value ? true : false}
+        // onFocus={handleSubmit()}
         keyboardType="numeric"
         maxLength={3}
+        ref={(el) => {
+          userInfo1Refs ? (userInfo1Refs.current[1] = el) : null;
+        }}
+        onSubmitEditing={() => {
+          userInfo1Refs?.current[2].focus();
+        }}
       />
     </>
   );
 };
 const renderWeightInput = (
-  { field: { onChange, onBlur, value } },
-  handleSubmit
+  { field: { onChange, onBlur, value } }: IDropdownField,
+  handleSubmit: Function,
+  userInfo1Refs?: React.MutableRefObject<any[]>
 ) => {
   // const onSubmit = (data) => console.log("dddd", data);
   return (
@@ -97,26 +141,37 @@ const renderWeightInput = (
         placeholder="몸무게를 입력해주세요"
         value={value}
         onChangeText={onChange}
-        onFocus={handleSubmit()}
+        onFocus={() => handleSubmit()()}
+        isActivated={value ? true : false}
+        // onFocus={handleSubmit()}
         keyboardType="numeric"
         maxLength={3}
+        ref={(el) => {
+          userInfo1Refs ? (userInfo1Refs.current[2] = el) : null;
+        }}
       />
     </>
   );
 };
 
-const UserInfo1 = () => {
-  //나중에 서버에서 카테고리 정보 가져올 때는 수정
-  const [DropdownValue, setDropdownValue] = useState(purposeCategory[0].value);
-  const [purposeCategoryItems, setPurposeCategoryItems] =
-    useState(purposeCategory);
-  const scrollRef = useRef();
+const UserInfo1 = ({ navigation: { navigate } }: NavigationProps) => {
+  // state
+  // redux
+  const { userInfo } = useSelector((state: RootState) => state.userInfo);
+  const dispatch = useDispatch();
+  console.log("redux userInfo", userInfo);
+
+  // refs
+  const scrollRef = useRef<ScrollView>(null);
+  const userInfo1Refs = useRef([]);
+
+  // react-hook-form
   const {
     control,
     handleSubmit,
     setValue,
     formState: { errors, isValid },
-  } = useForm({
+  } = useForm<IFormData>({
     // 나중에 사용자 정보 있으면 초기값으로 넣어줘야함.
     defaultValues: {
       gender: "M",
@@ -138,15 +193,16 @@ const UserInfo1 = () => {
   console.log("weightValue: ", weightValue);
   console.log("dietPurposeValue: ", dietPurposeValue);
   console.log("errors: ", errors);
-
   return (
     <Container>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 120 }}
+        contentContainerStyle={{ paddingBottom: 300 }}
         showsVerticalScrollIndicator={false}
         ref={scrollRef}
       >
         <Title>{"기본정보를\n입력해주세요"}</Title>
+
+        {/* gender */}
         <Row style={{ justifyContent: "space-between" }}>
           <BtnToggle
             isActivated={genderValue === "M" ? true : false}
@@ -166,10 +222,12 @@ const UserInfo1 = () => {
             </ToggleText>
           </BtnToggle>
         </Row>
+
+        {/* --- age --- */}
         <Controller
           control={control}
           rules={validationRules.age}
-          render={(field) => renderAgeInput(field, handleSubmit)}
+          render={(field) => renderAgeInput(field, handleSubmit, userInfo1Refs)}
           name="age"
         />
         {errors.age && (
@@ -177,10 +235,14 @@ const UserInfo1 = () => {
             <ErrorText>{errors.age.message}</ErrorText>
           </ErrorBox>
         )}
+
+        {/* --- height --- */}
         <Controller
           control={control}
           rules={validationRules.height}
-          render={(field) => renderHeightInput(field, handleSubmit)}
+          render={(field) =>
+            renderHeightInput(field, handleSubmit, userInfo1Refs)
+          }
           name="height"
         />
         {errors.height && (
@@ -188,10 +250,14 @@ const UserInfo1 = () => {
             <ErrorText>{errors.height.message}</ErrorText>
           </ErrorBox>
         )}
+
+        {/* --- weight --- */}
         <Controller
           control={control}
           rules={validationRules.weight}
-          render={(field) => renderWeightInput(field, handleSubmit)}
+          render={(field) =>
+            renderWeightInput(field, handleSubmit, userInfo1Refs)
+          }
           name="weight"
         />
         {errors.weight && (
@@ -199,15 +265,54 @@ const UserInfo1 = () => {
             <ErrorText>{errors.weight.message}</ErrorText>
           </ErrorBox>
         )}
+
+        {/* --- purpose --- */}
         <Dropdown
           placeholder="식단의 목적"
-          items={purposeCategoryItems}
+          items={purposeCategory}
           value={dietPurposeValue}
           setValue={setValue}
           scrollRef={scrollRef}
+          reactHookFormName={"dietPurposecd"}
         />
       </ScrollView>
-      <BtnBottomCTA btnStyle="activated">
+      <BtnBottomCTA
+        btnStyle={
+          ageValue &&
+          heightValue &&
+          weightValue &&
+          Object.keys(errors).length === 0
+            ? "activated"
+            : "inactivated"
+        }
+        disabled={
+          ageValue &&
+          heightValue &&
+          weightValue &&
+          Object.keys(errors).length === 0
+            ? false
+            : true
+        }
+        onPress={() => {
+          const BMR = calculateBMR(
+            genderValue,
+            ageValue,
+            heightValue,
+            weightValue
+          );
+          dispatch(
+            saveUserInfo({
+              gender: genderValue,
+              age: ageValue,
+              height: heightValue,
+              weight: weightValue,
+              dietPurposecd: dietPurposeValue,
+              bmr: BMR,
+            })
+          );
+          navigate("Stacks", { screen: "UserInfo2", params: BMR });
+        }}
+      >
         <BtnText>다음</BtnText>
       </BtnBottomCTA>
     </Container>

@@ -16,6 +16,7 @@ interface DropdownProps {
   items: Array<CategoryObject>;
   setItems?: React.Dispatch<React.SetStateAction<Array<CategoryObject>>>;
   scrollRef?: any;
+  reactHookFormName?: string;
 }
 
 const DropdownHeader = styled(InputHeaderText)`
@@ -24,7 +25,15 @@ const DropdownHeader = styled(InputHeaderText)`
 
 const Dropdown = (props: DropdownProps) => {
   const [open, setOpen] = useState(false);
-  const { placeholder, value, setValue, items, setItems, scrollRef } = props;
+  const {
+    placeholder,
+    value,
+    setValue,
+    items,
+    setItems,
+    scrollRef,
+    reactHookFormName,
+  } = props;
 
   return (
     <>
@@ -36,15 +45,16 @@ const Dropdown = (props: DropdownProps) => {
           borderColor: colors.inActivated,
         }}
         dropDownContainerStyle={{
-          position: "relative",
-          marginTop: -44,
+          position: "absolute",
+          marginTop: 8,
           paddingBottom: 4,
           borderRadius: 0,
           borderWidth: 1,
           borderTopWidth: 0,
+          borderBottomWidth: 1,
           elevation: 3,
           borderColor: colors.inActivated,
-          // zIndex: 6000,
+          zIndex: 6000,
         }}
         selectedItemContainerStyle={{
           backgroundColor: colors.highlight,
@@ -57,11 +67,13 @@ const Dropdown = (props: DropdownProps) => {
         showTickIcon={false}
         open={open}
         setOpen={() => {
-          !open && scrollRef.current.scrollToEnd();
+          scrollRef && !open && scrollRef.current.scrollToEnd();
           setOpen((open) => !open);
         }}
         value={value}
-        setValue={(v) => setValue("dietPurposecd", v)}
+        setValue={(v) =>
+          reactHookFormName ? setValue(reactHookFormName, v) : setValue(v)
+        }
         items={items}
         //   onChangeValue={() => {}}
         listMode="SCROLLVIEW"

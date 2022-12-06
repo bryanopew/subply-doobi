@@ -15,6 +15,7 @@ import {
   storeAccessToken,
   storeRefreshToken,
 } from "~/query/query";
+import { NavigationProps } from "~/constants/constants";
 
 const Container = styled.View`
   flex: 1;
@@ -42,12 +43,6 @@ const BtnKakaoLogin = styled(BtnCTA)`
 const BtnTextKakao = styled(BtnText)`
   color: ${colors.textMain};
 `;
-
-interface NavigationProps {
-  navigation: {
-    navigate: Function;
-  };
-}
 
 const Login = ({ navigation: { navigate } }: NavigationProps) => {
   // 실제 로그인. 테스트때만 주석처리
