@@ -38,6 +38,55 @@ export const aerobicTrainingCategrory = [
   { label: "하루 2시간 이상", value: "SP004005" },
 ];
 
+interface ITimeToMinutes {
+  [key: string]: number;
+}
+export const timeCdToMinutes: ITimeToMinutes = {
+  SP003001: 0,
+  SP003002: 30,
+  SP003003: 60,
+  SP003004: 90,
+  SP003005: 120,
+  SP004001: 0,
+  SP004002: 30,
+  SP004003: 60,
+  SP004004: 90,
+  SP004005: 120,
+};
+interface IPurposeToCalorie {
+  [key: string]: {
+    targetText: string;
+    additionalCalorieText: string;
+    additionalCalorie: string;
+  };
+}
+export const purposeCdToAddCalorie: IPurposeToCalorie = {
+  SP002001: {
+    targetText: "한 달1~2kg 감량",
+    additionalCalorieText: "-500kcal",
+    additionalCalorie: "-500",
+  },
+  SP002002: {
+    targetText: "한 달3~4kg 감량",
+    additionalCalorieText: "-700kcal",
+    additionalCalorie: "-700",
+  },
+  SP002003: {
+    targetText: "유지",
+    additionalCalorieText: "0kcal",
+    additionalCalorie: "0",
+  },
+  SP002004: {
+    targetText: "한 달1~2kg 증량",
+    additionalCalorieText: "500kcal",
+    additionalCalorie: "500",
+  },
+  SP002005: {
+    targetText: "한 달3~4kg 증량",
+    additionalCalorieText: "700kcal",
+    additionalCalorie: "700",
+  },
+};
 // validationRules
 export const validationRules = {
   age: {

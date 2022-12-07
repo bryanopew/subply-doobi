@@ -1,3 +1,5 @@
+import { purposeCdToAddCalorie, timeCdToMinutes } from "~/constants/constants";
+
 /** gender, age, height, weight  => BMR */
 export const calculateBMR = (
   gender: string,
@@ -28,32 +30,36 @@ export const calculateBMR = (
   } else return "";
 };
 
-interface ITimeToMinutes {
-  [key: string]: number;
-}
-const timeCdToMinutes: ITimeToMinutes = {
-  SP003001: 0,
-  SP003002: 30,
-  SP003003: 60,
-  SP003004: 90,
-  SP003005: 120,
-  SP004001: 0,
-  SP004002: 30,
-  SP004003: 60,
-  SP004004: 90,
-  SP004005: 120,
-};
-
 /** bmr, weightTimeCd, aerobicTimeCd => TMR */
-export const calculateTarget = (
+export const calculateNutrTarget = (
   weight: string,
   weightTimeCd: string,
   aerobicTimeCd: string,
+  dietPurposecd: string,
   BMR: string
 ) => {
   const wcal = 0.0175 * 6 * parseFloat(weight) * timeCdToMinutes[weightTimeCd];
   const acal = 0.0175 * 7 * parseFloat(weight) * timeCdToMinutes[aerobicTimeCd];
   const AMR = wcal + acal + parseFloat(BMR) * 0.2;
-  const TMR = Math.round(parseFloat(BMR) + AMR);
-  return String(TMR);
+  const TMR = parseFloat(BMR) + AMR;
+  const calorieTarget =
+    (TMR + parseInt(purposeCdToAddCalorie[dietPurposecd].additionalCalorie)) /
+    3;
+  const carbTarget = (calorieTarget * 0.55) / 4;
+  const proteinTarget = (calorieTarget * 0.2) / 4;
+  const fatTarget = (calorieTarget * 0.25) / 9;
+
+  return {
+    TMR: Math.round(TMR),
+    calorieTarget: Math.round(calorieTarget),
+    carbTarget: Math.round(carbTarget),
+    proteinTarget: Math.round(proteinTarget),
+    fatTarget: Math.round(fatTarget),
+  };
 };
+
+// export const calculateNutrTarget = (TMR: string) => {
+//   const dailyCalorie = TMR;
+
+//   return dailyCalorie;
+// };

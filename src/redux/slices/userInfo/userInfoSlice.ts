@@ -6,17 +6,28 @@ import {
   weightTrainingCategrory,
 } from "~/constants/constants";
 
+export interface IUserInfo {
+  gender: string;
+  age: string;
+  height: string;
+  weight: string;
+  dietPurposecd: string;
+  bmr: string;
+  weightTimeCd: string;
+  aerobicTimeCd: string;
+}
+
+export interface IUserTarget {
+  tmr: string;
+  calorie: string;
+  carb: string;
+  protein: string;
+  fat: string;
+}
+
 export interface userInfoState {
-  userInfo: {
-    gender: string;
-    age: string;
-    height: string;
-    weight: string;
-    dietPurposecd: string;
-    bmr: string;
-    weightTimeCd: string;
-    aerobicTimeCd: string;
-  };
+  userInfo: IUserInfo;
+  userTarget: IUserTarget;
 }
 
 const initialState: userInfoState = {
@@ -29,6 +40,13 @@ const initialState: userInfoState = {
     bmr: "",
     weightTimeCd: weightTrainingCategrory[0].value,
     aerobicTimeCd: aerobicTrainingCategrory[0].value,
+  },
+  userTarget: {
+    tmr: "",
+    calorie: "",
+    carb: "",
+    protein: "",
+    fat: "",
   },
 };
 
@@ -51,8 +69,20 @@ export const userInfoSlice = createSlice({
     ) => {
       state.userInfo = { ...state.userInfo, ...action.payload };
     },
+    saveUserTarget: (
+      state,
+      action: PayloadAction<{
+        tmr?: string;
+        calorie?: string;
+        carb?: string;
+        protein?: string;
+        fat?: string;
+      }>
+    ) => {
+      state.userTarget = { ...state.userTarget, ...action.payload };
+    },
   },
 });
 
-export const { saveUserInfo } = userInfoSlice.actions;
+export const { saveUserInfo, saveUserTarget } = userInfoSlice.actions;
 export default userInfoSlice.reducer;

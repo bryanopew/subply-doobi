@@ -21,8 +21,13 @@ import {
 } from "~/styles/styledConsts";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import Dropdown from "~/components/userInfoComp/Dropdown";
-import { saveUserInfo } from "~/redux/slices/userInfo/userInfoSlice";
-import { calculateTarget } from "~/util/targetCalculation";
+import {
+  IUserInfo,
+  saveUserInfo,
+  saveUserTarget,
+  userInfoState,
+} from "~/redux/slices/userInfo/userInfoSlice";
+import { calculateNutrTarget } from "~/util/targetCalculation";
 
 interface IFormData {
   bmrKnown: string;
@@ -70,6 +75,45 @@ const renderBmrKnownInput = (
       />
     </>
   );
+};
+
+const onHandlePress = (
+  dispatch: Function,
+  navigate: Function,
+  userInfo: IUserInfo,
+  bmrKnownValue: string,
+  weightTimeCdValue: string,
+  aerobicTimeCdValue: string
+) => {
+  // 기초대사량 직접 입력된 경우는 입력된 bmr로
+  const bmrMod = bmrKnownValue ? bmrKnownValue : userInfo.bmr;
+  const nutrTarget = calculateNutrTarget(
+    userInfo.weight,
+    weightTimeCdValue,
+    aerobicTimeCdValue,
+    userInfo.dietPurposecd,
+    bmrMod
+  );
+
+  console.log("onPress: nutrTarget:", nutrTarget);
+  dispatch(
+    saveUserInfo({
+      bmr: bmrMod,
+      weightTimeCd: weightTimeCdValue,
+      aerobicTimeCd: aerobicTimeCdValue,
+    })
+  );
+  dispatch(
+    saveUserTarget({
+      tmr: String(nutrTarget.TMR),
+      calorie: String(nutrTarget.calorieTarget),
+      carb: String(nutrTarget.carbTarget),
+      protein: String(nutrTarget.proteinTarget),
+      fat: String(nutrTarget.fatTarget),
+    })
+  );
+
+  navigate("Stacks", { screen: "UserInfo3", params: "" });
 };
 
 const UserInfo2 = ({ navigation: { navigate }, route }: NavigationProps) => {
@@ -137,29 +181,16 @@ const UserInfo2 = ({ navigation: { navigate }, route }: NavigationProps) => {
           Object.keys(errors).length === 0 ? "activated" : "inactivated"
         }
         disabled={Object.keys(errors).length === 0 ? false : true}
-        onPress={() => {
-          const calorieTarget = calculateTarget(
-            userInfo.weight,
+        onPress={() =>
+          onHandlePress(
+            dispatch,
+            navigate,
+            userInfo,
+            bmrKnownValue,
             weightTimeCdValue,
-            aerobicTimeCdValue,
-            bmrKnownValue
+            aerobicTimeCdValue
           )
-            ? dispatch(
-                saveUserInfo({
-                  bmr: bmrKnownValue,
-                  weightTimeCd: weightTimeCdValue,
-                  aerobicTimeCd: aerobicTimeCdValue,
-                })
-              )
-            : dispatch(
-                saveUserInfo({
-                  weightTimeCd: weightTimeCdValue,
-                  aerobicTimeCd: aerobicTimeCdValue,
-                })
-              );
-
-          navigate("Stacks", { screen: "UserInfo3", params: "" });
-        }}
+        }
       >
         <BtnText>다음</BtnText>
       </BtnBottomCTA>
