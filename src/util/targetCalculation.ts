@@ -48,18 +48,48 @@ export const calculateNutrTarget = (
   const carbTarget = (calorieTarget * 0.55) / 4;
   const proteinTarget = (calorieTarget * 0.2) / 4;
   const fatTarget = (calorieTarget * 0.25) / 9;
+  const calorieTargetPerMeal = calorieTarget;
+  const carbTargetPerMeal = carbTarget;
+  const proteinTargetPerMeal = proteinTarget;
+  const fatTargetPerMeal = fatTarget;
 
   return {
     TMR: Math.round(TMR),
-    calorieTarget: Math.round(calorieTarget),
-    carbTarget: Math.round(carbTarget),
-    proteinTarget: Math.round(proteinTarget),
-    fatTarget: Math.round(fatTarget),
+    calorieTarget: Math.round(calorieTargetPerMeal),
+    carbTarget: Math.round(carbTargetPerMeal),
+    proteinTarget: Math.round(proteinTargetPerMeal),
+    fatTarget: Math.round(fatTargetPerMeal),
   };
 };
 
-// export const calculateNutrTarget = (TMR: string) => {
-//   const dailyCalorie = TMR;
+export const calculateManualCalorie = (
+  carb: string,
+  protein: string,
+  fat: string
+) => {
+  const c = carb || "0";
+  const p = protein || "0";
+  const f = fat || "0";
+  const totalCalorie = parseInt(c) * 4 + parseInt(p) * 4 + parseInt(f) * 9;
+  const carbRatio =
+    totalCalorie == 0
+      ? "    "
+      : Math.round(((parseFloat(c) * 4) / totalCalorie) * 100);
+  const proteinRatio =
+    totalCalorie == 0
+      ? "    "
+      : Math.round(((parseFloat(p) * 4) / totalCalorie) * 100);
+  const fatRatio =
+    totalCalorie == 0
+      ? "    "
+      : Math.round(((parseFloat(f) * 9) / totalCalorie) * 100);
 
-//   return dailyCalorie;
-// };
+  console.log(c, p, f, totalCalorie, carbRatio, proteinRatio, fatRatio);
+
+  return {
+    totalCalorie: String(totalCalorie),
+    carbRatio: String(carbRatio),
+    proteinRatio: String(proteinRatio),
+    fatRatio: String(fatRatio),
+  };
+};

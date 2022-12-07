@@ -146,7 +146,7 @@ const UserInfo2 = ({ navigation: { navigate }, route }: NavigationProps) => {
   return (
     <Container>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 240 }}
+        contentContainerStyle={{ paddingBottom: 80 }}
         showsVerticalScrollIndicator={false}
       >
         <Title>{"선택정보를\n입력해주세요"}</Title>

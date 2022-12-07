@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components/native";
 import {
   BtnBottomCTA,
@@ -15,6 +15,7 @@ import {
   VerticalSpace,
 } from "~/styles/styledConsts";
 import {
+  IDropdownField,
   NavigationProps,
   purposeCategory,
   validationRules,
@@ -34,16 +35,6 @@ interface IFormData {
   weight: string;
   dietPurposecd: string;
 }
-
-interface IDropdownField {
-  field: {
-    onChange: () => void;
-    onBlur: () => void;
-    value: string;
-  };
-}
-// { field: { onChange, onBlur, value } },
-// handleSubmit
 
 const Title = styled(TextMain)`
   font-size: 24px;
@@ -75,7 +66,6 @@ const Input = styled(UserInfoTextInput)``;
 
 const renderAgeInput = (
   { field: { onChange, value } }: IDropdownField,
-  handleSubmit: Function,
   userInfo1Refs?: React.MutableRefObject<any[]>
 ) => {
   // const onSubmit = (data) => console.log("dddd", data);
@@ -86,7 +76,6 @@ const renderAgeInput = (
         placeholder="만 나이를 입력해주세요"
         value={value}
         onChangeText={onChange}
-        onFocus={() => handleSubmit()()}
         isActivated={value ? true : false}
         keyboardType="numeric"
         maxLength={3}
@@ -102,7 +91,6 @@ const renderAgeInput = (
 };
 const renderHeightInput = (
   { field: { onChange, onBlur, value } }: IDropdownField,
-  handleSubmit: Function,
   userInfo1Refs?: React.MutableRefObject<any[]>
 ) => {
   // const onSubmit = (data) => console.log("dddd", data);
@@ -113,9 +101,7 @@ const renderHeightInput = (
         placeholder="신장을 입력해주세요"
         value={value}
         onChangeText={onChange}
-        onFocus={() => handleSubmit()()}
         isActivated={value ? true : false}
-        // onFocus={handleSubmit()}
         keyboardType="numeric"
         maxLength={3}
         ref={(el) => {
@@ -130,7 +116,6 @@ const renderHeightInput = (
 };
 const renderWeightInput = (
   { field: { onChange, onBlur, value } }: IDropdownField,
-  handleSubmit: Function,
   userInfo1Refs?: React.MutableRefObject<any[]>
 ) => {
   // const onSubmit = (data) => console.log("dddd", data);
@@ -141,9 +126,7 @@ const renderWeightInput = (
         placeholder="몸무게를 입력해주세요"
         value={value}
         onChangeText={onChange}
-        onFocus={() => handleSubmit()()}
         isActivated={value ? true : false}
-        // onFocus={handleSubmit()}
         keyboardType="numeric"
         maxLength={3}
         ref={(el) => {
@@ -193,10 +176,15 @@ const UserInfo1 = ({ navigation: { navigate } }: NavigationProps) => {
   console.log("weightValue: ", weightValue);
   console.log("dietPurposeValue: ", dietPurposeValue);
   console.log("errors: ", errors);
+
+  useEffect(() => {
+    handleSubmit(() => console.log("submit!"))();
+  }, []);
+
   return (
     <Container>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 300 }}
+        contentContainerStyle={{ paddingBottom: 80 }}
         showsVerticalScrollIndicator={false}
         ref={scrollRef}
       >
@@ -227,7 +215,7 @@ const UserInfo1 = ({ navigation: { navigate } }: NavigationProps) => {
         <Controller
           control={control}
           rules={validationRules.age}
-          render={(field) => renderAgeInput(field, handleSubmit, userInfo1Refs)}
+          render={(field) => renderAgeInput(field, userInfo1Refs)}
           name="age"
         />
         {errors.age && (
@@ -240,9 +228,7 @@ const UserInfo1 = ({ navigation: { navigate } }: NavigationProps) => {
         <Controller
           control={control}
           rules={validationRules.height}
-          render={(field) =>
-            renderHeightInput(field, handleSubmit, userInfo1Refs)
-          }
+          render={(field) => renderHeightInput(field, userInfo1Refs)}
           name="height"
         />
         {errors.height && (
@@ -255,9 +241,7 @@ const UserInfo1 = ({ navigation: { navigate } }: NavigationProps) => {
         <Controller
           control={control}
           rules={validationRules.weight}
-          render={(field) =>
-            renderWeightInput(field, handleSubmit, userInfo1Refs)
-          }
+          render={(field) => renderWeightInput(field, userInfo1Refs)}
           name="weight"
         />
         {errors.weight && (
@@ -293,6 +277,7 @@ const UserInfo1 = ({ navigation: { navigate } }: NavigationProps) => {
             ? false
             : true
         }
+        height={52}
         onPress={() => {
           const BMR = calculateBMR(
             genderValue,

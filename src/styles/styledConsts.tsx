@@ -87,8 +87,9 @@ export const Seperator = styled.View`
  *  props 3. width -> width: ${p => p.width ?? `${SCREENWIDTH - 32}`}px;
  */
 export const BtnCTA = styled.TouchableOpacity`
-  height: ${({ height }: StyledProps) => height ?? 52}px;
-  width: ${({ width }: StyledProps) => width ?? `${SCREENWIDTH - 32}`}px;
+  height: ${({ height }: StyledProps) => (height ? `${height}px` : "52px")};
+  /* width: ${({ width }: StyledProps) => width ?? `${SCREENWIDTH - 32}px`}; */
+  width: 100%;
   border-radius: 4px;
   background-color: ${({ btnStyle }: StyledProps) =>
     btnStyle == "activated"

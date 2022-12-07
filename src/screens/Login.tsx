@@ -19,9 +19,12 @@ import { NavigationProps } from "~/constants/constants";
 
 const Container = styled.View`
   flex: 1;
+  padding: 0px 16px 0px 16px;
 `;
 
 const Box = styled.View`
+  width: 100%;
+  padding: 0px 16px 0px 16px;
   position: absolute;
   bottom: 70px;
   align-self: center;
@@ -34,6 +37,7 @@ const TitleText = styled.Text`
   font-weight: bold;
   text-align: center;
   line-height: 35px;
+  text-align: center;
 `;
 
 const BtnKakaoLogin = styled(BtnCTA)`

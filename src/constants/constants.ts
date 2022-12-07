@@ -37,6 +37,11 @@ export const aerobicTrainingCategrory = [
   { label: "하루 1시간30분~2시간 이하", value: "SP004004" },
   { label: "하루 2시간 이상", value: "SP004005" },
 ];
+export const nutrRatioCategory = [
+  { label: "55 : 20 : 25(보건복지부 추천)", value: "SP005001" },
+  { label: "20 : 20: 60(저탄고지 식단)", value: "SP005002" },
+  { label: "40 : 40 : 20(벌크업용)", value: "SP005003" },
+];
 
 interface ITimeToMinutes {
   [key: string]: number;
@@ -125,6 +130,44 @@ export const validationRules = {
         "정확한 기초대사량을 입력해주세요",
     },
   },
+  caloriePerMeal: {
+    maxlength: 4,
+    validate: {
+      range: (v: string) =>
+        (parseFloat(v) >= 300 && parseFloat(v) <= 1500) ||
+        "300~1500 kcal 사이로 입력해주세요",
+    },
+  },
+  carbManual: {
+    maxlength: 4,
+    validate: {
+      range: (v: string) =>
+        !v
+          ? `모든 영양성분을 입력해주세요`
+          : (parseFloat(v) >= 10 && parseFloat(v) <= 375) ||
+            `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
+    },
+  },
+  proteinManual: {
+    maxlength: 4,
+    validate: {
+      range: (v: string) =>
+        !v
+          ? `모든 영양성분을 입력해주세요`
+          : (parseFloat(v) >= 10 && parseFloat(v) <= 375) ||
+            `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
+    },
+  },
+  fatManual: {
+    maxlength: 4,
+    validate: {
+      range: (v: string) =>
+        !v
+          ? `모든 영양성분을 입력해주세요`
+          : (parseFloat(v) >= 5 && parseFloat(v) <= 100) ||
+            `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
+    },
+  },
 };
 
 // type
@@ -134,4 +177,12 @@ export interface NavigationProps {
     navigate: Function;
   };
   route?: any;
+}
+
+export interface IDropdownField {
+  field: {
+    onChange: () => void;
+    onBlur: () => void;
+    value: string;
+  };
 }

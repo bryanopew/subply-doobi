@@ -25,15 +25,8 @@ const DropdownHeader = styled(InputHeaderText)`
 
 const Dropdown = (props: DropdownProps) => {
   const [open, setOpen] = useState(false);
-  const {
-    placeholder,
-    value,
-    setValue,
-    items,
-    setItems,
-    scrollRef,
-    reactHookFormName,
-  } = props;
+  const { placeholder, value, setValue, items, scrollRef, reactHookFormName } =
+    props;
 
   return (
     <>
@@ -45,8 +38,9 @@ const Dropdown = (props: DropdownProps) => {
           borderColor: colors.inActivated,
         }}
         dropDownContainerStyle={{
-          position: "absolute",
-          marginTop: 8,
+          position: "relative",
+          marginTop: -42,
+          marginBottom: 40,
           paddingBottom: 4,
           borderRadius: 0,
           borderWidth: 1,
