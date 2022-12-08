@@ -92,6 +92,32 @@ export const purposeCdToAddCalorie: IPurposeToCalorie = {
     additionalCalorie: "700",
   },
 };
+
+interface IRatioCdValue {
+  [key: string]: {
+    carbRatio: string;
+    proteinRatio: string;
+    fatRatio: string;
+  };
+}
+export const ratioCdToValue: IRatioCdValue = {
+  SP005001: {
+    carbRatio: "0.55",
+    proteinRatio: "0.2",
+    fatRatio: "0.25",
+  },
+  SP005002: {
+    carbRatio: "0.2",
+    proteinRatio: "0.2",
+    fatRatio: "0.6",
+  },
+  SP005003: {
+    carbRatio: "0.4",
+    proteinRatio: "0.4",
+    fatRatio: "0.2",
+  },
+};
+
 // validationRules
 export const validationRules = {
   age: {

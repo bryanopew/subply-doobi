@@ -18,6 +18,7 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/store";
 import Dropdown from "./Dropdown";
+import { calculateCaloriesToNutr } from "~/util/targetCalculation";
 
 const ContentContainer = styled.View`
   padding-bottom: 30px;
@@ -27,6 +28,21 @@ const InputHeader = styled(InputHeaderText)`
   margin-top: 24px;
 `;
 const Input = styled(UserInfoTextInput)``;
+
+// TBD | CalculateByRatio.tsx, Auto.tsx, Manual.tsx 모두
+// ContentsContainer or SummaryContainer 겹침
+const SummaryContainer = styled.View`
+  margin-top: 12px;
+  border-width: 1px;
+  border-color: ${colors.main};
+  border-radius: 5px;
+  padding: 16px;
+`;
+
+const NutrientSummaryText = styled.Text`
+  font-size: 12px;
+  color: ${colors.textMain};
+`;
 
 const renderCaloriePerMealInput = (
   { field: { onChange, onBlur, value } }: IDropdownField,
@@ -53,6 +69,7 @@ const renderCaloriePerMealInput = (
 
 interface ICalculateByRatio {
   ratioType: string;
+  calorie: string;
   setValue: any;
   control: any;
   handleSubmit: any;
@@ -61,13 +78,15 @@ interface ICalculateByRatio {
 }
 const CalculateByRatio = ({
   ratioType,
+  calorie,
   setValue,
   control,
   handleSubmit,
   calorieRecommended,
   errors,
 }: ICalculateByRatio) => {
-  console.log(errors);
+  // 칼로리로 자동 계산된 각 영양성분
+  const { carb, protein, fat } = calculateCaloriesToNutr(ratioType, calorie);
 
   return (
     <ContentContainer>
@@ -93,6 +112,20 @@ const CalculateByRatio = ({
           <ErrorText>{errors.caloriePerMeal.message}</ErrorText>
         </ErrorBox>
       )}
+      <SummaryContainer>
+        <NutrientSummaryText>{`칼로리: ${
+          calorie || "  "
+        } kcal`}</NutrientSummaryText>
+        <NutrientSummaryText>{`탄수화물: ${
+          carb ? parseInt(carb) : "  "
+        } g`}</NutrientSummaryText>
+        <NutrientSummaryText>{`단백질: ${
+          protein ? parseInt(protein) : "  "
+        } g`}</NutrientSummaryText>
+        <NutrientSummaryText>{`지방: ${
+          fat ? parseInt(fat) : "  "
+        } g`}</NutrientSummaryText>
+      </SummaryContainer>
     </ContentContainer>
   );
 };

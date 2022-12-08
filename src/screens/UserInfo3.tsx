@@ -1,25 +1,24 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import React, { useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useForm, useWatch } from "react-hook-form";
+import { ScrollView, Text, TouchableOpacity } from "react-native";
+import Accordion from "react-native-collapsible/Accordion";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components/native";
+import Auto from "~/components/userInfoComp/Auto";
+import CalculateByRatio from "~/components/userInfoComp/CalculateByRatio";
+import Manual from "~/components/userInfoComp/Manual";
+import { NavigationProps, nutrRatioCategory } from "~/constants/constants";
 import { RootState } from "~/redux/store";
+import colors from "~/styles/colors";
 import {
   BtnBottomCTA,
-  BtnCTA,
   BtnText,
   Container,
   HorizontalSpace,
   StyledProps,
   TextMain,
 } from "~/styles/styledConsts";
-import styled from "styled-components/native";
-import Accordion from "react-native-collapsible/Accordion";
-import colors from "~/styles/colors";
-import AutoDo from "~/components/userInfoComp/Auto";
-import { useForm, useWatch } from "react-hook-form";
-import CalculateByRatio from "~/components/userInfoComp/CalculateByRatio";
-import { nutrRatioCategory } from "~/constants/constants";
-import Manual from "~/components/userInfoComp/Manual";
-import Auto from "~/components/userInfoComp/Auto";
+import { onSubmit, submitActionsByMethod } from "~/util/userInfoSubmit";
 
 interface IFormData {
   ratioType: string;
@@ -58,13 +57,14 @@ const ArrowIcon = styled.View`
   background-color: ${colors.backgroundLight};
 `;
 
-const UserInfo3 = () => {
+const UserInfo3 = ({ navigation: { navigate } }: NavigationProps) => {
   // redux
   const { userInfo, userTarget } = useSelector(
     (state: RootState) => state.userInfo
   );
-  console.log("userInfo3 userInfo:", userInfo);
-  console.log("userInfo3 userTarget:", userTarget);
+  const dispatch = useDispatch();
+  console.log("userInfo3: userInfo:", userInfo);
+  console.log("userInfo3: userTarget:", userTarget);
 
   // ref
   const scrollRef = useRef<ScrollView>(null);
@@ -105,6 +105,7 @@ const UserInfo3 = () => {
       content: (
         <CalculateByRatio
           ratioType={ratioType}
+          calorie={caloriePerMeal}
           setValue={setValue}
           control={control}
           handleSubmit={handleSubmit}
@@ -144,8 +145,7 @@ const UserInfo3 = () => {
   const updateSections = (actives) => {
     setActiveSections(actives);
   };
-  console.log("userInfo3: caloriePerMeal: ", caloriePerMeal);
-  console.log("errors: ", errors);
+  console.log("userInfo3: errors: ", errors);
 
   const btnIsActive =
     activeSections[0] === 0 ||
@@ -172,7 +172,7 @@ const UserInfo3 = () => {
           touchableComponent={TouchableOpacity}
           renderHeader={renderHeader}
           renderContent={renderContent}
-          duration={300}
+          duration={200}
           onChange={updateSections}
           renderFooter={() => <HorizontalSpace height={20} />}
         />
@@ -180,7 +180,21 @@ const UserInfo3 = () => {
       <BtnBottomCTA
         btnStyle={btnStyle}
         disabled={btnIsActive ? false : true}
-        onPress={() => console.log("onPress")}
+        onPress={() => {
+          const calculationMethod = activeSections[0];
+          const submitArgs = {
+            userInfo: userInfo,
+            userTarget: userTarget,
+            ratioType: ratioType,
+            caloriePerMeal: caloriePerMeal,
+            carbManual: carbManual,
+            proteinManual: proteinManual,
+            fatManual: fatManual,
+            dispatch: dispatch,
+          };
+          submitActionsByMethod[calculationMethod](submitArgs);
+          navigate("BottomTab", { screen: "Home" });
+        }}
       >
         <BtnText>완료</BtnText>
       </BtnBottomCTA>

@@ -1,4 +1,8 @@
-import { purposeCdToAddCalorie, timeCdToMinutes } from "~/constants/constants";
+import {
+  purposeCdToAddCalorie,
+  ratioCdToValue,
+  timeCdToMinutes,
+} from "~/constants/constants";
 
 /** gender, age, height, weight  => BMR */
 export const calculateBMR = (
@@ -62,27 +66,39 @@ export const calculateNutrTarget = (
   };
 };
 
+export const calculateCaloriesToNutr = (ratioCd: string, calorie: string) => {
+  const cal = calorie ? parseFloat(calorie) : 0;
+  const c =
+    cal === 0 ? 0 : (cal * parseFloat(ratioCdToValue[ratioCd].carbRatio)) / 4;
+  const p =
+    cal === 0
+      ? 0
+      : (cal * parseFloat(ratioCdToValue[ratioCd].proteinRatio)) / 4;
+  const f =
+    cal === 0 ? 0 : (cal * parseFloat(ratioCdToValue[ratioCd].fatRatio)) / 9;
+
+  return {
+    carb: String(Math.round(c)),
+    protein: String(Math.round(p)),
+    fat: String(Math.round(f)),
+  };
+};
+
 export const calculateManualCalorie = (
   carb: string,
   protein: string,
   fat: string
 ) => {
-  const c = carb || "0";
-  const p = protein || "0";
-  const f = fat || "0";
-  const totalCalorie = parseInt(c) * 4 + parseInt(p) * 4 + parseInt(f) * 9;
+  const c = carb ? parseFloat(carb) : 0;
+  const p = protein ? parseFloat(protein) : 0;
+  const f = fat ? parseFloat(fat) : 0;
+  const totalCalorie = c * 4 + p * 4 + f * 9;
   const carbRatio =
-    totalCalorie == 0
-      ? "    "
-      : Math.round(((parseFloat(c) * 4) / totalCalorie) * 100);
+    totalCalorie == 0 ? "    " : Math.round(((c * 4) / totalCalorie) * 100);
   const proteinRatio =
-    totalCalorie == 0
-      ? "    "
-      : Math.round(((parseFloat(p) * 4) / totalCalorie) * 100);
+    totalCalorie == 0 ? "    " : Math.round(((p * 4) / totalCalorie) * 100);
   const fatRatio =
-    totalCalorie == 0
-      ? "    "
-      : Math.round(((parseFloat(f) * 9) / totalCalorie) * 100);
+    totalCalorie == 0 ? "    " : Math.round(((f * 9) / totalCalorie) * 100);
 
   console.log(c, p, f, totalCalorie, carbRatio, proteinRatio, fatRatio);
 

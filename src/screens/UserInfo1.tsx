@@ -68,7 +68,6 @@ const renderAgeInput = (
   { field: { onChange, value } }: IDropdownField,
   userInfo1Refs?: React.MutableRefObject<any[]>
 ) => {
-  // const onSubmit = (data) => console.log("dddd", data);
   return (
     <>
       <InputHeader isActivated={value ? true : false}>만 나이</InputHeader>
@@ -94,7 +93,6 @@ const renderHeightInput = (
   userInfo1Refs?: React.MutableRefObject<any[]>,
   scrollRef?: any // TBD | scrollView ref type?!
 ) => {
-  // const onSubmit = (data) => console.log("dddd", data);
   return (
     <>
       <InputHeader isActivated={value ? true : false}>신장(cm)</InputHeader>
@@ -123,7 +121,6 @@ const renderWeightInput = (
   userInfo1Refs?: React.MutableRefObject<any[]>,
   scrollRef?: any // TBD | scrollView ref type?!
 ) => {
-  // const onSubmit = (data) => console.log("dddd", data);
   return (
     <>
       <InputHeader isActivated={value ? true : false}>몸무게(kg)</InputHeader>
@@ -150,7 +147,7 @@ const UserInfo1 = ({ navigation: { navigate } }: NavigationProps) => {
   // redux
   const { userInfo } = useSelector((state: RootState) => state.userInfo);
   const dispatch = useDispatch();
-  console.log("redux userInfo", userInfo);
+  console.log("userInfo1: userInfo: ", userInfo);
 
   // refs
   const scrollRef = useRef<ScrollView>(null);
@@ -178,12 +175,7 @@ const UserInfo1 = ({ navigation: { navigate } }: NavigationProps) => {
   const weightValue = useWatch({ control, name: "weight" });
   const dietPurposeValue = useWatch({ control, name: "dietPurposecd" });
 
-  console.log("genderValue: ", genderValue);
-  console.log("ageValue: ", ageValue);
-  console.log("heightValue: ", heightValue);
-  console.log("weightValue: ", weightValue);
-  console.log("dietPurposeValue: ", dietPurposeValue);
-  console.log("errors: ", errors);
+  console.log("userInfo1: errors: ", errors);
 
   useEffect(() => {
     handleSubmit(() => console.log("submit!"))();

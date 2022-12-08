@@ -94,8 +94,6 @@ const onHandlePress = (
     userInfo.dietPurposecd,
     bmrMod
   );
-
-  console.log("onPress: nutrTarget:", nutrTarget);
   dispatch(
     saveUserInfo({
       bmr: bmrMod,
@@ -117,9 +115,8 @@ const onHandlePress = (
 };
 
 const UserInfo2 = ({ navigation: { navigate }, route }: NavigationProps) => {
-  console.log("userInfo2 : ", route);
   const { userInfo } = useSelector((state: RootState) => state.userInfo);
-  console.log("redux userInfo in userInfo2", userInfo);
+  console.log("userInfo2: userInfo:", userInfo);
   // redux
   const dispatch = useDispatch();
 
@@ -140,9 +137,6 @@ const UserInfo2 = ({ navigation: { navigate }, route }: NavigationProps) => {
   const bmrKnownValue = useWatch({ control, name: "bmrKnown" });
   const weightTimeCdValue = useWatch({ control, name: "weightTimeCd" });
   const aerobicTimeCdValue = useWatch({ control, name: "aerobicTimeCd" });
-  console.log("bmrKnownValue", bmrKnownValue);
-  console.log("weightTimeCdValue", weightTimeCdValue);
-  console.log("aerobicTimeCdValue", aerobicTimeCdValue);
   return (
     <Container>
       <ScrollView

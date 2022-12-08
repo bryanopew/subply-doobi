@@ -14,17 +14,6 @@ import { IDropdownField, validationRules } from "~/constants/constants";
 import { calculateManualCalorie } from "~/util/targetCalculation";
 import colors from "~/styles/colors";
 
-interface IManual {
-  carbManual: string;
-  proteinManual: string;
-  fatManual: string;
-  setValue: any;
-  control: any;
-  handleSubmit: any;
-  errors: any;
-  scrollRef?: any;
-}
-
 const ContentsContainer = styled.View``;
 
 const InputHeader = styled(InputHeaderText)`
@@ -44,7 +33,16 @@ const NutrientSummaryText = styled.Text`
   font-size: 12px;
   color: ${colors.textMain};
 `;
-
+interface IManual {
+  carbManual: string;
+  proteinManual: string;
+  fatManual: string;
+  setValue: any;
+  control: any;
+  handleSubmit: any;
+  errors: any;
+  scrollRef?: any;
+}
 const Manual = ({
   carbManual,
   proteinManual,
