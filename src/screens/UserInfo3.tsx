@@ -93,6 +93,7 @@ const UserInfo3 = () => {
   const fatManual = useWatch({ control, name: "fatManual" });
 
   // accordion
+  // activeSections[0] == 1 : 두비가 알아서 / 탄단지 비율 / 영양성분 직접 입력
   const [activeSections, setActiveSections] = useState<number[]>([]);
   const CONTENT = [
     {
@@ -123,6 +124,7 @@ const UserInfo3 = () => {
           control={control}
           handleSubmit={handleSubmit}
           errors={errors}
+          scrollRef={scrollRef}
         />
       ),
     },
@@ -142,18 +144,16 @@ const UserInfo3 = () => {
   const updateSections = (actives) => {
     setActiveSections(actives);
   };
-  console.log("userInfo3: activeSessions: ", activeSections);
   console.log("userInfo3: caloriePerMeal: ", caloriePerMeal);
-
-  console.log("caloriePerMeal error: ", !errors.caloriePerMeal);
+  console.log("errors: ", errors);
 
   const btnIsActive =
     activeSections[0] === 0 ||
     (activeSections[0] === 1 && !errors.caloriePerMeal) ||
     (activeSections[0] === 2 &&
       !errors.carbManual &&
-      errors.proteinManual &&
-      errors.fatManual)
+      !errors.proteinManual &&
+      !errors.fatManual)
       ? true
       : false;
   const btnStyle = btnIsActive ? "activated" : "inactivated";

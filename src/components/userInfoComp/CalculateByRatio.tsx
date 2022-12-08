@@ -35,7 +35,9 @@ const renderCaloriePerMealInput = (
 ) => {
   return (
     <>
-      <InputHeader isActivated={value ? true : false}>만 나이</InputHeader>
+      <InputHeader isActivated={value ? true : false}>
+        한 끼 칼로리 (kcal)
+      </InputHeader>
       <Input
         placeholder={`한 끼 칼로리 입력 (추천: ${calorieRecommended})`}
         value={value}

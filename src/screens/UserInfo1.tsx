@@ -91,7 +91,8 @@ const renderAgeInput = (
 };
 const renderHeightInput = (
   { field: { onChange, onBlur, value } }: IDropdownField,
-  userInfo1Refs?: React.MutableRefObject<any[]>
+  userInfo1Refs?: React.MutableRefObject<any[]>,
+  scrollRef?: any // TBD | scrollView ref type?!
 ) => {
   // const onSubmit = (data) => console.log("dddd", data);
   return (
@@ -99,6 +100,9 @@ const renderHeightInput = (
       <InputHeader isActivated={value ? true : false}>신장(cm)</InputHeader>
       <Input
         placeholder="신장을 입력해주세요"
+        onFocus={() => {
+          scrollRef?.current.scrollTo({ y: 40, animated: true });
+        }}
         value={value}
         onChangeText={onChange}
         isActivated={value ? true : false}
@@ -116,7 +120,8 @@ const renderHeightInput = (
 };
 const renderWeightInput = (
   { field: { onChange, onBlur, value } }: IDropdownField,
-  userInfo1Refs?: React.MutableRefObject<any[]>
+  userInfo1Refs?: React.MutableRefObject<any[]>,
+  scrollRef?: any // TBD | scrollView ref type?!
 ) => {
   // const onSubmit = (data) => console.log("dddd", data);
   return (
@@ -124,6 +129,9 @@ const renderWeightInput = (
       <InputHeader isActivated={value ? true : false}>몸무게(kg)</InputHeader>
       <Input
         placeholder="몸무게를 입력해주세요"
+        onFocus={() => {
+          scrollRef?.current.scrollTo({ y: 40, animated: true });
+        }}
         value={value}
         onChangeText={onChange}
         isActivated={value ? true : false}
@@ -228,7 +236,7 @@ const UserInfo1 = ({ navigation: { navigate } }: NavigationProps) => {
         <Controller
           control={control}
           rules={validationRules.height}
-          render={(field) => renderHeightInput(field, userInfo1Refs)}
+          render={(field) => renderHeightInput(field, userInfo1Refs, scrollRef)}
           name="height"
         />
         {errors.height && (

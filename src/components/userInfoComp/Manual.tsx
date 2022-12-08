@@ -22,6 +22,7 @@ interface IManual {
   control: any;
   handleSubmit: any;
   errors: any;
+  scrollRef?: any;
 }
 
 const ContentsContainer = styled.View``;
@@ -52,6 +53,7 @@ const Manual = ({
   control,
   handleSubmit,
   errors,
+  scrollRef,
 }: IManual) => {
   // redux
   const { userInfo, userTarget } = useSelector(
@@ -82,6 +84,7 @@ const Manual = ({
         </InputHeader>
         <Input
           placeholder={`한 끼 탄수화물 입력 (추천: ${carbRecommended})`}
+          onFocus={() => scrollRef?.current.scrollTo({ y: 40, animated: true })}
           value={value}
           onChangeText={onChange}
           isActivated={value ? true : false}
@@ -109,6 +112,7 @@ const Manual = ({
         </InputHeader>
         <Input
           placeholder={`한 끼 단백질 입력 (추천: ${proteinRecommended})`}
+          onFocus={() => scrollRef?.current.scrollTo({ y: 40, animated: true })}
           value={value}
           onChangeText={onChange}
           isActivated={value ? true : false}
@@ -136,6 +140,7 @@ const Manual = ({
         </InputHeader>
         <Input
           placeholder={`한 끼 지방 입력 (추천: ${fatRecommended})`}
+          onFocus={() => scrollRef?.current.scrollTo({ y: 40, animated: true })}
           value={value}
           onChangeText={onChange}
           isActivated={value ? true : false}

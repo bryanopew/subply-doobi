@@ -24,7 +24,6 @@ const Container = styled.View`
 
 const Box = styled.View`
   width: 100%;
-  padding: 0px 16px 0px 16px;
   position: absolute;
   bottom: 70px;
   align-self: center;
