@@ -18,7 +18,7 @@ import {
   StyledProps,
   TextMain,
 } from "~/styles/styledConsts";
-import { onSubmit, submitActionsByMethod } from "~/util/userInfoSubmit";
+import { submitActionsByMethod } from "~/util/userInfoSubmit";
 
 interface IFormData {
   ratioType: string;
@@ -48,7 +48,7 @@ const AccordionHeaderTitle = styled.Text`
     isActivated ? colors.main : colors.textSub};
 `;
 
-const ArrowIcon = styled.View`
+const ArrowIcon = styled.Image`
   width: 20px;
   height: 20px;
   position: absolute;
@@ -130,19 +130,23 @@ const UserInfo3 = ({ navigation: { navigate } }: NavigationProps) => {
       ),
     },
   ];
-  const renderHeader = (section, index, isActive) => {
+  const renderHeader = (section: any, index: number, isActive: boolean) => {
     // return section.title;
     return (
       <AccordionHeader isActivated={isActive}>
         <AccordionHeaderTitle>{section.title}</AccordionHeaderTitle>
-        <ArrowIcon />
+        {isActive ? (
+          <ArrowIcon source={require(`~/assets/icons/20_up.png`)} />
+        ) : (
+          <ArrowIcon source={require(`~/assets/icons/20_down.png`)} />
+        )}
       </AccordionHeader>
     );
   };
-  const renderContent = (section, isActive) => {
+  const renderContent = (section: any, index: number, isActive: boolean) => {
     return section.content;
   };
-  const updateSections = (actives) => {
+  const updateSections = (actives: Array<number>) => {
     setActiveSections(actives);
   };
   console.log("userInfo3: errors: ", errors);

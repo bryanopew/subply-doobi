@@ -4,6 +4,8 @@ import {
   timeCdToMinutes,
 } from "~/constants/constants";
 
+import { IProduct } from "~/redux/slices/cart/cartSlice";
+
 /** gender, age, height, weight  => BMR */
 export const calculateBMR = (
   gender: string,
@@ -107,5 +109,26 @@ export const calculateManualCalorie = (
     carbRatio: String(carbRatio),
     proteinRatio: String(proteinRatio),
     fatRatio: String(fatRatio),
+  };
+};
+
+export const calculateCartNutr = (menu: Array<IProduct>) => {
+  let calorie = 0;
+  let carb = 0;
+  let protein = 0;
+  let fat = 0;
+  if (menu) {
+    menu.forEach((product) => {
+      calorie += parseInt(product.calorie);
+      carb += parseInt(product.carb);
+      protein += parseInt(product.protein);
+      fat += parseInt(product.fat);
+    });
+  }
+  return {
+    calorie,
+    carb,
+    protein,
+    fat,
   };
 };

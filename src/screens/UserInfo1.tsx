@@ -99,7 +99,7 @@ const renderHeightInput = (
       <Input
         placeholder="신장을 입력해주세요"
         onFocus={() => {
-          scrollRef?.current.scrollTo({ y: 40, animated: true });
+          scrollRef?.current.scrollTo({ y: 80, animated: true });
         }}
         value={value}
         onChangeText={onChange}
@@ -127,7 +127,7 @@ const renderWeightInput = (
       <Input
         placeholder="몸무게를 입력해주세요"
         onFocus={() => {
-          scrollRef?.current.scrollTo({ y: 40, animated: true });
+          scrollRef?.current.scrollToEnd();
         }}
         value={value}
         onChangeText={onChange}
@@ -241,7 +241,7 @@ const UserInfo1 = ({ navigation: { navigate } }: NavigationProps) => {
         <Controller
           control={control}
           rules={validationRules.weight}
-          render={(field) => renderWeightInput(field, userInfo1Refs)}
+          render={(field) => renderWeightInput(field, userInfo1Refs, scrollRef)}
           name="weight"
         />
         {errors.weight && (

@@ -15,7 +15,11 @@ const StepIcon = styled.Image`
 const Stack = createNativeStackNavigator();
 const Stacks = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShadowVisible: false }}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShadowVisible: false,
+      }}
+    >
       <Stack.Screen
         name="Login"
         component={Login}
