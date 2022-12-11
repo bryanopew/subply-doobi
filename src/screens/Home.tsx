@@ -137,7 +137,7 @@ const Home = () => {
         data={testData}
         renderItem={(item) => <FoodList item={item} />}
         ItemSeparatorComponent={() => <HorizontalSpace height={16} />}
-        keyExtractor={(item) => item.productNo}
+        keyExtractor={(item) => item.item?.productNo}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 80 }}
       />

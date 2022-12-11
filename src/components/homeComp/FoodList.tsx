@@ -82,6 +82,7 @@ interface IFoods {
   };
 }
 const FoodList = ({ item }: IFoods) => {
+  console.log(item);
   return (
     <Container>
       <Row>
