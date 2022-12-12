@@ -54,7 +54,6 @@ const ArrowIcon = styled.Image`
   position: absolute;
   align-self: flex-end;
   right: 8px;
-  background-color: ${colors.backgroundLight};
 `;
 
 const UserInfo3 = ({ navigation: { navigate } }: NavigationProps) => {

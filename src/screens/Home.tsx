@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components/native";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "~/redux/store";
@@ -16,9 +16,10 @@ import {
 import { addProductToMenu, deleteProduct } from "~/redux/slices/cart/cartSlice";
 import NutrientsProgress from "~/components/common/NutrientsProgress";
 import colors from "~/styles/colors";
-import { FlatList, Text } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import { getTestData } from "~/query/query";
 import FoodList from "~/components/homeComp/FoodList";
+import MenuSelect from "~/components/homeComp/MenuSelect";
 
 const MenuAndSearchBox = styled.View`
   flex-direction: row;
@@ -26,18 +27,25 @@ const MenuAndSearchBox = styled.View`
   height: 48px;
   align-items: center;
 `;
-const MenuSelect = styled.TouchableOpacity`
-  flex: 1;
-  height: 26px;
-  background-color: ${colors.highlight};
-  align-items: center;
-  justify-content: center;
+
+const MenuHeader = styled.TouchableOpacity`
+  flex-direction: row;
+`;
+
+const HeaderText = styled(TextMain)`
+  font-size: 18px;
+  font-weight: bold;
+`;
+
+const Arrow = styled.Image`
+  width: 24px;
+  height: 24px;
 `;
 
 const SearchInput = styled.TextInput`
-  flex: 2.5;
+  flex: 1;
   height: 32px;
-  margin-left: 16px;
+  margin-left: 8px;
   border-radius: 4px;
   background-color: ${colors.line};
   padding: 5px 8px 5px 8px;
@@ -89,16 +97,32 @@ const Home = () => {
   const [menuIndex, setMenuIndex] = useState(0);
   const [searchText, setSearchText] = useState("");
   const [testData, setTestData] = useState([]);
+  const [menuSelectOpen, setMenuSelectOpen] = useState(false);
 
   console.log("Home: userInfo: ", userInfo);
   console.log("Home: userTarget: ", userTarget);
   console.log("Home: cart: ", cart);
+
+  useEffect(() => {
+    const getInitialFoods = async () => {
+      const res = await getTestData();
+      setTestData(res);
+    };
+    getInitialFoods();
+  }, []);
+
   return (
     <Container>
       <MenuAndSearchBox>
-        <MenuSelect>
-          <Text>식단 1</Text>
-        </MenuSelect>
+        {/* <MenuSelect menuIndex={menuIndex} setMenuIndex={setMenuIndex} /> */}
+        <MenuHeader onPress={() => setMenuSelectOpen((v) => !v)}>
+          <HeaderText>{`식단${menuIndex + 1}`}</HeaderText>
+          {menuSelectOpen ? (
+            <Arrow source={require(`~/assets/icons/24_dropdown_up.png`)} />
+          ) : (
+            <Arrow source={require(`~/assets/icons/24_dropdown_down.png`)} />
+          )}
+        </MenuHeader>
         <SearchInput
           onChangeText={setSearchText}
           value={searchText}
@@ -135,9 +159,9 @@ const Home = () => {
       <FlatList
         style={{ marginTop: 24 }}
         data={testData}
-        renderItem={(item) => <FoodList item={item} />}
+        renderItem={(item) => <FoodList item={item} menuIndex={menuIndex} />}
         ItemSeparatorComponent={() => <HorizontalSpace height={16} />}
-        keyExtractor={(item) => item.item?.productNo}
+        keyExtractor={(item) => item.productNo}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 80 }}
       />
@@ -150,6 +174,14 @@ const Home = () => {
       >
         <BtnText>테스트 데이터</BtnText>
       </BtnCTA>
+      {menuSelectOpen && (
+        <MenuSelect
+          menuIndex={menuIndex}
+          setMenuIndex={setMenuIndex}
+          open={menuSelectOpen}
+          setOpen={setMenuSelectOpen}
+        />
+      )}
     </Container>
   );
 };

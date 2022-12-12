@@ -10,11 +10,7 @@ import {
 } from "@react-native-seoul/kakao-login";
 import axios from "axios";
 import { TOKEN_CONTROLLER } from "~/query/urls";
-import {
-  getDoobiToken,
-  storeAccessToken,
-  storeRefreshToken,
-} from "~/query/query";
+import { storeKakaoAccessToken } from "~/query/query";
 import { NavigationProps } from "~/constants/constants";
 
 const Container = styled.View`
@@ -58,11 +54,8 @@ const Login = ({ navigation: { navigate } }: NavigationProps) => {
 
     console.log("signInWithKakao: login!");
     console.log(kakaoAccessToken);
-
-    const { accessToken, refreshToken } = await getDoobiToken(kakaoAccessToken);
-    if (accessToken && refreshToken) {
-      await storeAccessToken(accessToken);
-      await storeRefreshToken(refreshToken);
+    await storeKakaoAccessToken(kakaoAccessToken);
+    if (kakaoAccessToken) {
       navigate("Stacks", { screen: "UserInfo1" });
     } else {
       console.log("토큰발급 오류");

@@ -102,3 +102,5 @@ const NutrientsProgress = ({ menuIndex }: { menuIndex: number }) => {
 };
 
 export default NutrientsProgress;
+
+// 식단  0  / 1

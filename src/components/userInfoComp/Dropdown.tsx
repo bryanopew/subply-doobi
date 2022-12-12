@@ -8,7 +8,7 @@ interface CategoryObject {
   label: string;
   value: string;
 }
-interface DropdownProps {
+interface IDropdown {
   placeholder: string;
   value: string;
   // setValue: React.Dispatch<React.SetStateAction<string>>;
@@ -23,7 +23,7 @@ const DropdownHeader = styled(InputHeaderText)`
   margin-top: 24px;
 `;
 
-const Dropdown = (props: DropdownProps) => {
+const Dropdown = (props: IDropdown) => {
   const [open, setOpen] = useState(false);
   const { placeholder, value, setValue, items, scrollRef, reactHookFormName } =
     props;

@@ -4,6 +4,15 @@ import styled from "styled-components/native";
 import colors from "~/styles/colors";
 import { Col, Row, TextMain, TextSub } from "~/styles/styledConsts";
 import { BASE_URL } from "~/query/urls";
+import { hasProduct } from "~/util/reduxUtil";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "~/redux/store";
+import {
+  addProductToMenu,
+  deleteProduct,
+  IProduct,
+} from "~/redux/slices/cart/cartSlice";
+import { PayloadAction } from "@reduxjs/toolkit";
 
 const Container = styled.View`
   flex: 1;
@@ -61,7 +70,7 @@ const NutrValue = styled(TextMain)`
   font-size: 12px;
 `;
 
-const AddToCartBtn = styled.TouchableOpacity`
+const AddOrDeleteBtn = styled.TouchableOpacity`
   height: 100%;
   margin-left: 16px;
   align-self: flex-start;
@@ -73,15 +82,19 @@ const AddToCartBtnImage = styled.Image`
   height: 24px;
 `;
 
-interface IFoods {
-  index: number;
+interface IFoodList {
   item: {
     item: {
       [key: string]: string;
     };
   };
+  menuIndex: number;
 }
-const FoodList = ({ item }: IFoods) => {
+
+const FoodList = ({ item, menuIndex }: IFoodList) => {
+  const { cart } = useSelector((state: RootState) => state.cart);
+  const dispatch = useDispatch();
+  const itemExist = hasProduct(cart[menuIndex], item.item.productNo);
   console.log(item);
   return (
     <Container>
@@ -102,11 +115,25 @@ const FoodList = ({ item }: IFoods) => {
           </Col>
           <Price>{item.item?.price}원</Price>
         </ProductInfoContainer>
-        <AddToCartBtn onPress={() => console.log("AddToCartBtn Clicked")}>
-          <AddToCartBtnImage
-            source={require(`~/assets/icons/24_foodAdd.png`)}
-          />
-        </AddToCartBtn>
+        <AddOrDeleteBtn
+          onPress={() => {
+            itemExist
+              ? dispatch(
+                  deleteProduct({ menuIndex, productNo: item.item.productNo })
+                )
+              : dispatch(addProductToMenu({ menuIndex, product: item.item }));
+          }}
+        >
+          {itemExist ? (
+            <AddToCartBtnImage
+              source={require(`~/assets/icons/24_foodDelete.png`)}
+            />
+          ) : (
+            <AddToCartBtnImage
+              source={require(`~/assets/icons/24_foodAdd.png`)}
+            />
+          )}
+        </AddOrDeleteBtn>
       </Row>
       <NutrSummaryContainer>
         <Nutr>

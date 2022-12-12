@@ -132,3 +132,5 @@ export const calculateCartNutr = (menu: Array<IProduct>) => {
     fat,
   };
 };
+
+// cart -> menu -> product
