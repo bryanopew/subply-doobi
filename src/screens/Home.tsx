@@ -99,8 +99,6 @@ const Home = () => {
   const [testData, setTestData] = useState([]);
   const [menuSelectOpen, setMenuSelectOpen] = useState(false);
 
-  console.log("Home: userInfo: ", userInfo);
-  console.log("Home: userTarget: ", userTarget);
   console.log("Home: cart: ", cart);
 
   useEffect(() => {

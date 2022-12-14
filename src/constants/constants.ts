@@ -42,6 +42,13 @@ export const nutrRatioCategory = [
   { label: "20 : 20: 60(저탄고지 식단)", value: "SP005002" },
   { label: "40 : 40 : 20(벌크업용)", value: "SP005003" },
 ];
+// consts for screens
+export const myPageBtns = [
+  { title: "몸무게 변경", btnId: "ChangeWeight" },
+  { title: "내 기록", btnId: "History" },
+  { title: "찜한 식품", btnId: "Likes" },
+  { title: "주문내역", btnId: "Orders" },
+];
 
 interface ITimeToMinutes {
   [key: string]: number;
@@ -65,14 +72,14 @@ interface IPurposeToCalorie {
     additionalCalorie: string;
   };
 }
-export const purposeCdToAddCalorie: IPurposeToCalorie = {
+export const purposeCdToValue: IPurposeToCalorie = {
   SP002001: {
-    targetText: "한 달1~2kg 감량",
+    targetText: "한 달 1~2kg 감량",
     additionalCalorieText: "-500kcal",
     additionalCalorie: "-500",
   },
   SP002002: {
-    targetText: "한 달3~4kg 감량",
+    targetText: "한 달 3~4kg 감량",
     additionalCalorieText: "-700kcal",
     additionalCalorie: "-700",
   },
@@ -82,12 +89,12 @@ export const purposeCdToAddCalorie: IPurposeToCalorie = {
     additionalCalorie: "0",
   },
   SP002004: {
-    targetText: "한 달1~2kg 증량",
+    targetText: "한 달 1~2kg 증량",
     additionalCalorieText: "500kcal",
     additionalCalorie: "500",
   },
   SP002005: {
-    targetText: "한 달3~4kg 증량",
+    targetText: "한 달 3~4kg 증량",
     additionalCalorieText: "700kcal",
     additionalCalorie: "700",
   },
@@ -119,7 +126,12 @@ export const ratioCdToValue: IRatioCdValue = {
 };
 
 // validationRules
-export const validationRules = {
+interface IValidationRules {
+  [key: string]: {
+    [key: string]: any;
+  };
+}
+export const validationRules: IValidationRules = {
   age: {
     required: "필수 정보입니다",
     maxLength: 3,
@@ -156,7 +168,7 @@ export const validationRules = {
         "정확한 기초대사량을 입력해주세요",
     },
   },
-  caloriePerMeal: {
+  calorie: {
     maxlength: 4,
     validate: {
       range: (v: string) =>
@@ -164,7 +176,8 @@ export const validationRules = {
         "300~1500 kcal 사이로 입력해주세요",
     },
   },
-  carbManual: {
+  // TBD | carbManual -> carb로 고쳐서 mypage에서 validationRulesByNutr 단계 없애기
+  carb: {
     maxlength: 4,
     validate: {
       range: (v: string) =>
@@ -174,7 +187,7 @@ export const validationRules = {
             `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
     },
   },
-  proteinManual: {
+  protein: {
     maxlength: 4,
     validate: {
       range: (v: string) =>
@@ -184,7 +197,7 @@ export const validationRules = {
             `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
     },
   },
-  fatManual: {
+  fat: {
     maxlength: 4,
     validate: {
       range: (v: string) =>
@@ -205,7 +218,7 @@ export interface NavigationProps {
   route?: any;
 }
 
-export interface IDropdownField {
+export interface IFormField {
   field: {
     onChange: () => void;
     onBlur: () => void;

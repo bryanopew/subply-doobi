@@ -5,8 +5,8 @@ import styled from "styled-components/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "~/screens/Home";
 import Mypage from "~/screens/Mypage";
-import Like from "~/screens/Like";
 import Cart from "~/screens/Cart";
+import Likes from "~/screens/Likes";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,6 +40,7 @@ const BottomTab = () => {
         name="Mypage"
         component={Mypage}
         options={{
+          headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
               <BottomTabIcon
@@ -54,8 +55,8 @@ const BottomTab = () => {
         }}
       />
       <Tab.Screen
-        name="Like"
-        component={Like}
+        name="Likes"
+        component={Likes}
         options={{
           tabBarIcon: ({ focused }) =>
             focused ? (

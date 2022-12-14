@@ -1,10 +1,11 @@
 import {
-  purposeCdToAddCalorie,
+  purposeCdToValue,
   ratioCdToValue,
   timeCdToMinutes,
 } from "~/constants/constants";
 
 import { IProduct } from "~/redux/slices/cart/cartSlice";
+import { IUserTarget } from "~/redux/slices/userInfo/userInfoSlice";
 
 /** gender, age, height, weight  => BMR */
 export const calculateBMR = (
@@ -44,13 +45,13 @@ export const calculateNutrTarget = (
   dietPurposecd: string,
   BMR: string
 ) => {
+  console.log(weight);
   const wcal = 0.0175 * 6 * parseFloat(weight) * timeCdToMinutes[weightTimeCd];
   const acal = 0.0175 * 7 * parseFloat(weight) * timeCdToMinutes[aerobicTimeCd];
   const AMR = wcal + acal + parseFloat(BMR) * 0.2;
   const TMR = parseFloat(BMR) + AMR;
   const calorieTarget =
-    (TMR + parseInt(purposeCdToAddCalorie[dietPurposecd].additionalCalorie)) /
-    3;
+    (TMR + parseInt(purposeCdToValue[dietPurposecd].additionalCalorie)) / 3;
   const carbTarget = (calorieTarget * 0.55) / 4;
   const proteinTarget = (calorieTarget * 0.2) / 4;
   const fatTarget = (calorieTarget * 0.25) / 9;
@@ -61,10 +62,10 @@ export const calculateNutrTarget = (
 
   return {
     TMR: Math.round(TMR),
-    calorieTarget: Math.round(calorieTargetPerMeal),
-    carbTarget: Math.round(carbTargetPerMeal),
-    proteinTarget: Math.round(proteinTargetPerMeal),
-    fatTarget: Math.round(fatTargetPerMeal),
+    calorie: Math.round(calorieTargetPerMeal),
+    carb: Math.round(carbTargetPerMeal),
+    protein: Math.round(proteinTargetPerMeal),
+    fat: Math.round(fatTargetPerMeal),
   };
 };
 
@@ -133,4 +134,80 @@ export const calculateCartNutr = (menu: Array<IProduct>) => {
   };
 };
 
-// cart -> menu -> product
+const convertByCalorie = (
+  targetCalorie: string,
+  calorieValueForMod: string
+) => {
+  const calorie = parseFloat(calorieValueForMod);
+  const carb = (calorie * parseFloat(ratioCdToValue["SP005001"].carbRatio)) / 4;
+  const protein =
+    (calorie * parseFloat(ratioCdToValue["SP005001"].proteinRatio)) / 4;
+  const fat = (calorie * parseFloat(ratioCdToValue["SP005001"].fatRatio)) / 9;
+  return {
+    calorie: String(calorie),
+    carb: String(Math.round(carb)),
+    protein: String(Math.round(protein)),
+    fat: String(Math.round(fat)),
+  };
+};
+
+const convertByCarb = (targetCalorie: string, carbForMod: string) => {
+  const calorie = parseFloat(targetCalorie);
+  const carb = parseFloat(carbForMod);
+  const proteinRatio = parseFloat(ratioCdToValue["SP005001"].proteinRatio);
+  const fatRatio = parseFloat(ratioCdToValue["SP005001"].proteinRatio);
+  const protein =
+    ((calorie - carb * 4) * (proteinRatio / (proteinRatio + fatRatio))) / 4;
+  const fat =
+    ((calorie - carb * 4) * (fatRatio / (proteinRatio + fatRatio))) / 9;
+  return {
+    calorie: String(Math.round(calorie)),
+    carb: String(Math.round(carb)),
+    protein: String(Math.round(protein)),
+    fat: String(Math.round(fat)),
+  };
+};
+const convertByProtein = (targetCalorie: string, proteinForMod: string) => {
+  const calorie = parseFloat(targetCalorie);
+  const protein = parseFloat(proteinForMod);
+  const carbRatio = parseFloat(ratioCdToValue["SP005001"].carbRatio);
+  const fatRatio = parseFloat(ratioCdToValue["SP005001"].proteinRatio);
+  const carb =
+    ((calorie - protein * 4) * (carbRatio / (carbRatio + fatRatio))) / 4;
+  const fat =
+    ((calorie - protein * 4) * (fatRatio / (carbRatio + fatRatio))) / 4;
+  return {
+    calorie: String(Math.round(calorie)),
+    carb: String(Math.round(carb)),
+    protein: String(Math.round(protein)),
+    fat: String(Math.round(fat)),
+  };
+};
+const convertByFat = (targetCalorie: string, fatForMod: string) => {
+  const calorie = parseFloat(targetCalorie);
+  const fat = parseFloat(fatForMod);
+  const proteinRatio = parseFloat(ratioCdToValue["SP005001"].proteinRatio);
+  const carbRatio = parseFloat(ratioCdToValue["SP005001"].carbRatio);
+  const protein =
+    ((calorie - fat * 4) * (proteinRatio / (proteinRatio + carbRatio))) / 4;
+  const carb =
+    ((calorie - fat * 4) * (carbRatio / (proteinRatio + carbRatio))) / 4;
+  return {
+    calorie: String(Math.round(calorie)),
+    carb: String(Math.round(carb)),
+    protein: String(Math.round(protein)),
+    fat: String(Math.round(fat)),
+  };
+};
+
+export const nutrConvert: {
+  [key: string]: (
+    targetCalorie: string,
+    input: string
+  ) => { calorie: string; carb: string; protein: string; fat: string };
+} = {
+  calorie: (targetCalorie, nutr) => convertByCalorie(targetCalorie, nutr),
+  carb: (targetCalorie, nutr) => convertByCarb(targetCalorie, nutr),
+  protein: (targetCalorie, nutr) => convertByProtein(targetCalorie, nutr),
+  fat: (targetCalorie, nutr) => convertByFat(targetCalorie, nutr),
+};

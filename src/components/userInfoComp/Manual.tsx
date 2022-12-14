@@ -10,7 +10,7 @@ import {
   InputHeaderText,
   UserInfoTextInput,
 } from "~/styles/styledConsts";
-import { IDropdownField, validationRules } from "~/constants/constants";
+import { IFormField, validationRules } from "~/constants/constants";
 import { calculateManualCalorie } from "~/util/targetCalculation";
 import colors from "~/styles/colors";
 
@@ -54,9 +54,7 @@ const Manual = ({
   scrollRef,
 }: IManual) => {
   // redux
-  const { userInfo, userTarget } = useSelector(
-    (state: RootState) => state.userInfo
-  );
+  const { userTarget } = useSelector((state: RootState) => state.userInfo);
 
   const carbRecommended = userTarget.carb;
   const proteinRecommended = userTarget.protein;
@@ -71,7 +69,7 @@ const Manual = ({
 
   // react-hook-form
   const renderCarbInput = (
-    { field: { onChange, value } }: IDropdownField,
+    { field: { onChange, value } }: IFormField,
     carbRecommended: string,
     manualRefs?: React.MutableRefObject<any[]>
   ) => {
@@ -99,7 +97,7 @@ const Manual = ({
     );
   };
   const renderProteinInput = (
-    { field: { onChange, value } }: IDropdownField,
+    { field: { onChange, value } }: IFormField,
     proteinRecommended: string,
     manualRefs?: React.MutableRefObject<any[]>
   ) => {
@@ -127,7 +125,7 @@ const Manual = ({
     );
   };
   const renderFatInput = (
-    { field: { onChange, value } }: IDropdownField,
+    { field: { onChange, value } }: IFormField,
     fatRecommended: string,
     manualRefs?: React.MutableRefObject<any[]>
   ) => {
@@ -160,7 +158,7 @@ const Manual = ({
     <ContentsContainer>
       <Controller
         control={control}
-        rules={validationRules.carbManual}
+        rules={validationRules.carb}
         render={(field) => renderCarbInput(field, carbRecommended, manualRefs)}
         name="carbManual"
       />
@@ -172,7 +170,7 @@ const Manual = ({
 
       <Controller
         control={control}
-        rules={validationRules.proteinManual}
+        rules={validationRules.protein}
         render={(field) =>
           renderProteinInput(field, proteinRecommended, manualRefs)
         }
@@ -186,7 +184,7 @@ const Manual = ({
 
       <Controller
         control={control}
-        rules={validationRules.fatManual}
+        rules={validationRules.fat}
         render={(field) => renderFatInput(field, fatRecommended, manualRefs)}
         name="fatManual"
       />

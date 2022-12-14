@@ -7,6 +7,7 @@ import {
 } from "~/constants/constants";
 
 export interface IUserInfo {
+  nickname: string;
   gender: string;
   age: string;
   height: string;
@@ -18,6 +19,7 @@ export interface IUserInfo {
 }
 
 export interface IUserTarget {
+  [key: string]: string;
   tmr: string;
   calorie: string;
   carb: string;
@@ -32,6 +34,7 @@ export interface userInfoState {
 
 const initialState: userInfoState = {
   userInfo: {
+    nickname: "",
     gender: "M",
     age: "",
     height: "",

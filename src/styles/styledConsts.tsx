@@ -8,6 +8,7 @@ export interface StyledProps {
   btnStyle?: string;
   width?: number;
   height?: number;
+  backgroundColor?: string;
 }
 
 export const Container = styled.View`
@@ -47,7 +48,8 @@ export const ErrorBox = styled.View`
   background-color: ${colors.warning};
   border-radius: 3px;
   align-self: flex-end;
-  opacity: 0.8;
+  opacity: 0.9;
+  z-index: 1;
 `;
 
 export const AccordionContentContainer = styled.View`
@@ -160,7 +162,7 @@ export const HorizontalLine = styled.View`
 export const HorizontalSpace = styled.View`
   width: 100%;
   height: ${({ height }: StyledProps) => `${height}px`};
-  background-color: ${colors.white};
+  /* background-color: ${colors.white}; */
 `;
 
 /** props1. width */

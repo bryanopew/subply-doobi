@@ -13,6 +13,7 @@ import {
   IProduct,
 } from "~/redux/slices/cart/cartSlice";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { SCREENWIDTH } from "~/constants/constants";
 
 const Container = styled.View`
   flex: 1;
@@ -60,6 +61,7 @@ const Price = styled(TextMain)`
 
 const Nutr = styled.View`
   flex-direction: row;
+  width: ${(SCREENWIDTH - 16) / 5}px;
 `;
 
 const NutrText = styled(TextSub)`
@@ -95,7 +97,6 @@ const FoodList = ({ item, menuIndex }: IFoodList) => {
   const { cart } = useSelector((state: RootState) => state.cart);
   const dispatch = useDispatch();
   const itemExist = hasProduct(cart[menuIndex], item.item.productNo);
-  console.log(item);
   return (
     <Container>
       <Row>
@@ -138,19 +139,19 @@ const FoodList = ({ item, menuIndex }: IFoodList) => {
       <NutrSummaryContainer>
         <Nutr>
           <NutrText>칼로리</NutrText>
-          <NutrValue>123kcal</NutrValue>
+          <NutrValue> {parseInt(item.item.calorie)}</NutrValue>
         </Nutr>
         <Nutr>
-          <NutrText>칼로리</NutrText>
-          <NutrValue>123kcal</NutrValue>
+          <NutrText>탄수화물</NutrText>
+          <NutrValue> {parseInt(item.item.carb)}</NutrValue>
         </Nutr>
         <Nutr>
-          <NutrText>칼로리</NutrText>
-          <NutrValue>123kcal</NutrValue>
+          <NutrText>단백질</NutrText>
+          <NutrValue> {parseInt(item.item.protein)}</NutrValue>
         </Nutr>
         <Nutr>
-          <NutrText>칼로리</NutrText>
-          <NutrValue>123kcal</NutrValue>
+          <NutrText>지방</NutrText>
+          <NutrValue> {parseInt(item.item.fat)}</NutrValue>
         </Nutr>
       </NutrSummaryContainer>
     </Container>

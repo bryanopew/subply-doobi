@@ -15,7 +15,7 @@ import {
   VerticalSpace,
 } from "~/styles/styledConsts";
 import {
-  IDropdownField,
+  IFormField,
   NavigationProps,
   purposeCategory,
   validationRules,
@@ -65,7 +65,7 @@ const InputHeader = styled(InputHeaderText)`
 const Input = styled(UserInfoTextInput)``;
 
 const renderAgeInput = (
-  { field: { onChange, value } }: IDropdownField,
+  { field: { onChange, value } }: IFormField,
   userInfo1Refs?: React.MutableRefObject<any[]>
 ) => {
   return (
@@ -89,7 +89,7 @@ const renderAgeInput = (
   );
 };
 const renderHeightInput = (
-  { field: { onChange, onBlur, value } }: IDropdownField,
+  { field: { onChange, onBlur, value } }: IFormField,
   userInfo1Refs?: React.MutableRefObject<any[]>,
   scrollRef?: any // TBD | scrollView ref type?!
 ) => {
@@ -117,7 +117,7 @@ const renderHeightInput = (
   );
 };
 const renderWeightInput = (
-  { field: { onChange, onBlur, value } }: IDropdownField,
+  { field: { onChange, onBlur, value } }: IFormField,
   userInfo1Refs?: React.MutableRefObject<any[]>,
   scrollRef?: any // TBD | scrollView ref type?!
 ) => {

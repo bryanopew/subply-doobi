@@ -11,7 +11,7 @@ import {
 } from "~/styles/styledConsts";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import {
-  IDropdownField,
+  IFormField,
   nutrRatioCategory,
   validationRules,
 } from "~/constants/constants";
@@ -45,7 +45,7 @@ const NutrientSummaryText = styled.Text`
 `;
 
 const renderCaloriePerMealInput = (
-  { field: { onChange, onBlur, value } }: IDropdownField,
+  { field: { onChange, onBlur, value } }: IFormField,
   handleSubmit: Function,
   calorieRecommended?: string
 ) => {
@@ -100,7 +100,7 @@ const CalculateByRatio = ({
       {/* --- caloriePerMeal --- */}
       <Controller
         control={control}
-        rules={validationRules.caloriePerMeal}
+        rules={validationRules.calorie}
         render={(field) =>
           renderCaloriePerMealInput(field, handleSubmit, calorieRecommended)
         }

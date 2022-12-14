@@ -35,7 +35,7 @@ interface IFormData {
   aerobicTimeCd: string;
 }
 
-interface IDropdownField {
+interface IFormField {
   field: {
     onChange: () => void;
     onBlur: () => void;
@@ -54,7 +54,7 @@ const InputHeader = styled(InputHeaderText)`
 const Input = styled(UserInfoTextInput)``;
 
 const renderBmrKnownInput = (
-  { field: { onChange, value } }: IDropdownField,
+  { field: { onChange, value } }: IFormField,
   handleSubmit: Function,
   userInfo1Refs?: React.MutableRefObject<any[]>
 ) => {
@@ -104,10 +104,10 @@ const onHandlePress = (
   dispatch(
     saveUserTarget({
       tmr: String(nutrTarget.TMR),
-      calorie: String(nutrTarget.calorieTarget),
-      carb: String(nutrTarget.carbTarget),
-      protein: String(nutrTarget.proteinTarget),
-      fat: String(nutrTarget.fatTarget),
+      calorie: String(nutrTarget.calorie),
+      carb: String(nutrTarget.carb),
+      protein: String(nutrTarget.protein),
+      fat: String(nutrTarget.fat),
     })
   );
 

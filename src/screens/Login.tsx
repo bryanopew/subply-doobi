@@ -46,7 +46,8 @@ const BtnTextKakao = styled(BtnText)`
 const Login = ({ navigation: { navigate } }: NavigationProps) => {
   // 실제 로그인. 테스트때만 주석처리
   const signInWithKakao = async (): Promise<void> => {
-    // TBD: 로그인 정보 있으면 바로 메인페이지로 이동시키기
+    // TBD: 서버에 로그인 정보 (!!!닉네임!!!, 키 몸무게 등)있으면 redux-state에 저장 후
+    // 바로 메인페이지로 이동시키기
     // TBD: ios 로그인 설정
 
     const token: KakaoOAuthToken = await login();

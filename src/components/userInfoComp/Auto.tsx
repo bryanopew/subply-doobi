@@ -5,7 +5,7 @@ import colors from "~/styles/colors";
 import { Col } from "~/styles/styledConsts";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/store";
-import { purposeCdToAddCalorie } from "~/constants/constants";
+import { purposeCdToValue } from "~/constants/constants";
 
 const ContentsContainer = styled.View`
   margin-top: 12px;
@@ -25,9 +25,8 @@ const Auto = () => {
     userInfo: { dietPurposecd },
     userTarget: { tmr, calorie, carb, protein, fat },
   } = useSelector((state: RootState) => state.userInfo);
-  const purposeText = purposeCdToAddCalorie[dietPurposecd].targetText;
-  const calorieModText =
-    purposeCdToAddCalorie[dietPurposecd].additionalCalorieText;
+  const purposeText = purposeCdToValue[dietPurposecd].targetText;
+  const calorieModText = purposeCdToValue[dietPurposecd].additionalCalorieText;
 
   return (
     <ContentsContainer>
