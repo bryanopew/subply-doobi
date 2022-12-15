@@ -1,6 +1,3 @@
-// <<<<<<< HEAD
-// =======
-
 // export const BASE_URL = `http://13.125.244.117:8080`;
 export const BASE_URL = `http://15.164.96.218:8080`;
 // >>>>>>> feature/home

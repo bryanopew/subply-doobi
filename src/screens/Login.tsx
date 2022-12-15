@@ -3,19 +3,7 @@ import React, { useState } from "react";
 import styled from "styled-components/native";
 import { BtnCTA, BtnText } from "~/styles/styledConsts";
 import colors from "~/styles/colors";
-import {
-  KakaoOAuthToken,
-  login,
-  logout,
-} from "@react-native-seoul/kakao-login";
-import axios from "axios";
-import { GET_TOKEN } from "~/query/urls";
-import {
-  getDoobiToken,
-  storeKakaoAccessToken,
-  storeToken,
-  validateToken,
-} from "~/query/query";
+import { validateToken } from "~/query/query";
 import { NavigationProps } from "~/constants/constants";
 
 const Container = styled.View`
@@ -67,10 +55,6 @@ const Login = ({ navigation: { navigate } }: NavigationProps) => {
       <Box>
         <TitleText>{"식단조절은\n두비에게"}</TitleText>
         <BtnKakaoLogin btnStyle="kakao" onPress={signInWithKakao}>
-          {/* <BtnKakaoLogin
-          btnStyle="kakao"
-          onPress={() => navigate("Stacks", { screen: "UserInfo1" })}
-        > */}
           <BtnTextKakao>카카오 로그인</BtnTextKakao>
         </BtnKakaoLogin>
       </Box>
