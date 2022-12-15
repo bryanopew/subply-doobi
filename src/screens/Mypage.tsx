@@ -14,7 +14,7 @@ import colors from "~/styles/colors";
 import DAlert from "~/components/common/DAlert";
 import { myPageBtns, NavigationProps } from "~/constants/constants";
 import NutrTarget from "~/components/myPageComp/NutrTarget";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "~/redux/store";
 import CalChangeAlert from "~/components/myPageComp/CalChangeAlert";
 import NutrChangeAlert from "~/components/myPageComp/NutrChangeAlert";
@@ -25,6 +25,7 @@ import {
 } from "~/util/targetCalculation";
 import { useForm, useWatch } from "react-hook-form";
 import WeightChangeAlert from "~/components/myPageComp/WeightChangeAlert";
+import { updateUserInfo } from "~/redux/slices/userInfo/userInfoSlice";
 
 const Container = styled.View`
   flex: 1;
@@ -114,6 +115,7 @@ const Mypage = ({ navigation: { navigate } }: NavigationProps) => {
   const { userTarget, userInfo } = useSelector(
     (state: RootState) => state.userInfo
   );
+  const dispatch = useDispatch();
 
   // FlatList Data
   const nutrTargetData = [
@@ -142,6 +144,46 @@ const Mypage = ({ navigation: { navigate } }: NavigationProps) => {
       alertType: "fat",
     },
   ];
+
+  // react-hook-form
+  interface IFormData {
+    calorie: string;
+    carb: string;
+    protein: string;
+    fat: string;
+    weight: string;
+  }
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors, isValid },
+  } = useForm<IFormData>({
+    defaultValues: {
+      calorie: userTarget.calorie,
+      carb: userTarget.carb,
+      protein: userTarget.protein,
+      fat: userTarget.fat,
+      weight: userInfo.weight,
+    },
+  });
+  const calorieValue = useWatch({ control, name: "calorie" });
+  const carbValue = useWatch({ control, name: "carb" });
+  const proteinValue = useWatch({ control, name: "protein" });
+  const fatValue = useWatch({ control, name: "fat" });
+  const weightValue = useWatch({ control, name: "weight" });
+  const [autoCalculate, setAutoCalculate] = useState(false);
+
+  const valueByAlertType: { [key: string]: string } = {
+    calorie: calorieValue,
+    carb: carbValue,
+    protein: proteinValue,
+    fat: fatValue,
+  };
+
+  // userInfo change alert
+  const [alertShow, setAlertShow] = useState(false);
+  const [alertType, setAlertType] = useState("calorie");
 
   interface IRenderAlert {
     [key: string]: () => React.ReactElement;
@@ -191,91 +233,72 @@ const Mypage = ({ navigation: { navigate } }: NavigationProps) => {
     ),
   };
 
-  // react-hook-form
-  interface IFormData {
-    calorie: string;
-    carb: string;
-    protein: string;
-    fat: string;
-    weight: string;
-  }
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    formState: { errors, isValid },
-  } = useForm<IFormData>({
-    defaultValues: {
-      calorie: userTarget.calorie,
-      carb: userTarget.carb,
-      protein: userTarget.protein,
-      fat: userTarget.fat,
-      weight: userInfo.weight,
-    },
-  });
-  const calorieValue = useWatch({ control, name: "calorie" });
-  const carbValue = useWatch({ control, name: "carb" });
-  const proteinValue = useWatch({ control, name: "protein" });
-  const fatValue = useWatch({ control, name: "fat" });
-  const weightValue = useWatch({ control, name: "weight" });
-  const [autoCalculate, setAutoCalculate] = useState(false);
-
-  const valueByAlertType: { [key: string]: string } = {
-    calorie: calorieValue,
-    carb: carbValue,
-    protein: proteinValue,
-    fat: fatValue,
+  const onAlertConfirm = () => {
+    if (alertType === "weight") {
+      if (autoCalculate) {
+        // TBD | store, 서버에 weight, 바뀐 target정보 Put
+        const bmr = calculateBMR(
+          userInfo.gender,
+          userInfo.age,
+          userInfo.height,
+          weightValue
+        );
+        const res = calculateNutrTarget(
+          weightValue,
+          userInfo.weightTimeCd,
+          userInfo.aerobicTimeCd,
+          userInfo.dietPurposecd,
+          bmr
+        );
+        dispatch(updateUserInfo(res));
+      } else {
+        // TBD | store, 서버에 weight, tmr정보만 Put
+        const bmr = calculateBMR(
+          userInfo.gender,
+          userInfo.age,
+          userInfo.height,
+          weightValue
+        );
+        const res = calculateNutrTarget(
+          weightValue,
+          userInfo.weightTimeCd,
+          userInfo.aerobicTimeCd,
+          userInfo.dietPurposecd,
+          bmr
+        );
+        dispatch(updateUserInfo({ tmr: res.tmr, weight: weightValue }));
+      }
+    } else {
+      // TBD | store, 서버에 바뀐 target정보 Put
+      const res = nutrConvert[alertType](
+        userTarget.calorie,
+        valueByAlertType[alertType]
+      );
+      dispatch(updateUserInfo(res));
+    }
+    setAlertShow(false);
   };
 
-  // userInfo change alert
-  const [alertShow, setAlertShow] = useState(false);
-  const [alertType, setAlertType] = useState("calorie");
+  const onAlertCancel = () => {
+    if (alertType === "weight") {
+      setValue(alertType, userInfo.weight);
+    } else {
+      // TBD | 오류메시지 해결 모르겠다...
+      setValue(alertType, userTarget[alertType]);
+    }
+    setAlertShow(false);
+  };
 
+  console.log("Mypage: userInfo: ", userInfo);
+  console.log("Mypage: userTarget: ", userTarget);
   return (
     <Container>
       <DAlert
         alertShow={alertShow}
         renderContent={() => renderAlertByType[alertType]()}
-        onConfirm={() => {
-          if (alertType === "weight") {
-            if (autoCalculate) {
-              console.log("weightValue: ", weightValue);
-              // TBD | store, 서버에 weight, 바뀐 target정보 Put
-              const bmr = calculateBMR(
-                userInfo.gender,
-                userInfo.age,
-                userInfo.height,
-                weightValue
-              );
-              const res = calculateNutrTarget(
-                weightValue,
-                userInfo.weightTimeCd,
-                userInfo.aerobicTimeCd,
-                userInfo.dietPurposecd,
-                bmr
-              );
-              console.log(res);
-            } else {
-              // TBD | store, 서버에 weight정보만 Put
-            }
-          } else {
-            // TBD | store, 서버에 바뀐 target정보 Put
-            const res = nutrConvert[alertType](
-              userTarget.calorie,
-              valueByAlertType[alertType]
-            );
-            console.log(res);
-          }
-        }}
-        onCancel={() => {
-          if (alertType === "weight") {
-            setValue(alertType, userInfo.weight);
-          } else {
-            // TBD | 오류메시지 해결 모르겠다...
-            setValue(alertType, userTarget[alertType]);
-          }
-          setAlertShow(false);
-        }}
+        onConfirm={onAlertConfirm}
+        onCancel={onAlertCancel}
+        confirmLabel="변경"
       />
       <Card>
         <ProfileContainer>
@@ -325,7 +348,6 @@ const Mypage = ({ navigation: { navigate } }: NavigationProps) => {
           <Col key={item.btnId}>
             <PageBtn
               onPress={() => {
-                console.log("onPress: ", item.btnId);
                 if (item.btnId === "ChangeWeight") {
                   setAlertType("weight");
                   setAlertShow(true);

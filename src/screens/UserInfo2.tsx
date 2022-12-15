@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   aerobicTrainingCategrory,
   NavigationProps,
@@ -69,7 +69,6 @@ const renderBmrKnownInput = (
         value={value}
         onChangeText={onChange}
         isActivated={value ? true : false}
-        onFocus={handleSubmit()}
         keyboardType="numeric"
         maxLength={4}
       />
@@ -103,11 +102,11 @@ const onHandlePress = (
   );
   dispatch(
     saveUserTarget({
-      tmr: String(nutrTarget.TMR),
-      calorie: String(nutrTarget.calorie),
-      carb: String(nutrTarget.carb),
-      protein: String(nutrTarget.protein),
-      fat: String(nutrTarget.fat),
+      tmr: nutrTarget.tmr,
+      calorie: nutrTarget.calorie,
+      carb: nutrTarget.carb,
+      protein: nutrTarget.protein,
+      fat: nutrTarget.fat,
     })
   );
 
@@ -137,6 +136,9 @@ const UserInfo2 = ({ navigation: { navigate }, route }: NavigationProps) => {
   const bmrKnownValue = useWatch({ control, name: "bmrKnown" });
   const weightTimeCdValue = useWatch({ control, name: "weightTimeCd" });
   const aerobicTimeCdValue = useWatch({ control, name: "aerobicTimeCd" });
+  useEffect(() => {
+    handleSubmit(() => console.log("submit!"))();
+  }, []);
   return (
     <Container>
       <ScrollView

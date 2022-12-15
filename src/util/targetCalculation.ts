@@ -61,11 +61,11 @@ export const calculateNutrTarget = (
   const fatTargetPerMeal = fatTarget;
 
   return {
-    TMR: Math.round(TMR),
-    calorie: Math.round(calorieTargetPerMeal),
-    carb: Math.round(carbTargetPerMeal),
-    protein: Math.round(proteinTargetPerMeal),
-    fat: Math.round(fatTargetPerMeal),
+    tmr: String(Math.round(TMR)),
+    calorie: String(Math.round(calorieTargetPerMeal)),
+    carb: String(Math.round(carbTargetPerMeal)),
+    protein: String(Math.round(proteinTargetPerMeal)),
+    fat: String(Math.round(fatTargetPerMeal)),
   };
 };
 
@@ -189,9 +189,9 @@ const convertByFat = (targetCalorie: string, fatForMod: string) => {
   const proteinRatio = parseFloat(ratioCdToValue["SP005001"].proteinRatio);
   const carbRatio = parseFloat(ratioCdToValue["SP005001"].carbRatio);
   const protein =
-    ((calorie - fat * 4) * (proteinRatio / (proteinRatio + carbRatio))) / 4;
+    ((calorie - fat * 9) * (proteinRatio / (proteinRatio + carbRatio))) / 4;
   const carb =
-    ((calorie - fat * 4) * (carbRatio / (proteinRatio + carbRatio))) / 4;
+    ((calorie - fat * 9) * (carbRatio / (proteinRatio + carbRatio))) / 4;
   return {
     calorie: String(Math.round(calorie)),
     carb: String(Math.round(carb)),

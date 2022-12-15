@@ -84,8 +84,59 @@ export const userInfoSlice = createSlice({
     ) => {
       state.userTarget = { ...state.userTarget, ...action.payload };
     },
+    updateUserInfo: (
+      state,
+      action: PayloadAction<{
+        tmr?: string;
+        weight?: string;
+        calorie?: string;
+        carb?: string;
+        protein?: string;
+        fat?: string;
+      }>
+    ) => {
+      const { tmr, weight, calorie, carb, protein, fat } = action.payload;
+      const isWeightChange = tmr && weight;
+      const isNutrChange = calorie && carb && protein && fat;
+      if (isWeightChange && isNutrChange) {
+        console.log("updateUserInfo: 몸무게 -> 자동계산");
+        state.userInfo = {
+          ...state.userInfo,
+          weight: weight,
+        };
+        state.userTarget = {
+          ...state.userTarget,
+          tmr: tmr,
+          calorie: calorie,
+          carb: carb,
+          protein: protein,
+          fat: fat,
+        };
+      } else if (isWeightChange && !isNutrChange) {
+        console.log("updateUserInfo: 몸무게만");
+        console.log(weight);
+        state.userInfo = {
+          ...state.userInfo,
+          weight: weight,
+        };
+        state.userTarget = {
+          ...state.userTarget,
+          tmr: tmr,
+        };
+      } else if (!isWeightChange && isNutrChange) {
+        console.log("updateUserInfo: 영양만");
+        state.userTarget = {
+          ...state.userTarget,
+          calorie: calorie,
+          carb: carb,
+          protein: protein,
+          fat: fat,
+        };
+      }
+    },
   },
 });
 
-export const { saveUserInfo, saveUserTarget } = userInfoSlice.actions;
+export const { saveUserInfo, saveUserTarget, updateUserInfo } =
+  userInfoSlice.actions;
 export default userInfoSlice.reducer;
