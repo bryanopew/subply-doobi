@@ -118,7 +118,13 @@ const Mypage = ({ navigation: { navigate } }: NavigationProps) => {
   const dispatch = useDispatch();
 
   // FlatList Data
-  const nutrTargetData = [
+  type INutrTargetData = Array<{
+    nutrient: string;
+    value: string;
+    color: string;
+    alertType: "calorie" | "carb" | "protein" | "fat" | "weight";
+  }>;
+  const nutrTargetData: INutrTargetData = [
     {
       nutrient: "칼로리",
       value: userTarget.calorie,
@@ -183,7 +189,9 @@ const Mypage = ({ navigation: { navigate } }: NavigationProps) => {
 
   // userInfo change alert
   const [alertShow, setAlertShow] = useState(false);
-  const [alertType, setAlertType] = useState("calorie");
+  const [alertType, setAlertType] = useState<
+    "calorie" | "carb" | "protein" | "fat" | "weight"
+  >("calorie");
 
   interface IRenderAlert {
     [key: string]: () => React.ReactElement;

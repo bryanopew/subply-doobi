@@ -8,9 +8,10 @@ import { RootState } from "~/redux/store";
 import {
   addMenuToCart,
   deleteMenu,
-  IProduct,
+  setMenuIndex,
 } from "~/redux/slices/cart/cartSlice";
 import { Col, HorizontalLine, TextMain } from "~/styles/styledConsts";
+import { IProduct } from "~/constants/constants";
 
 const SelectContainer = styled.View`
   position: absolute;
@@ -55,19 +56,11 @@ const menuToDropdownValues = (cart: Array<Array<IProduct>>) => {
 };
 
 interface IMenuSelect {
-  menuIndex: number;
-  setMenuIndex: React.Dispatch<React.SetStateAction<number>>;
-  open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const MenuSelect = ({
-  menuIndex,
-  setMenuIndex,
-  open,
-  setOpen,
-}: IMenuSelect) => {
+const MenuSelect = ({ setOpen }: IMenuSelect) => {
   // redux
-  const { cart } = useSelector((state: RootState) => state.cart);
+  const { menuIndex, cart } = useSelector((state: RootState) => state.cart);
   const dispatch = useDispatch();
 
   const dropdownCategory = menuToDropdownValues(cart);
@@ -78,7 +71,7 @@ const MenuSelect = ({
         renderItem={({ item }) => (
           <Menu
             onPress={() => {
-              setMenuIndex(item.index);
+              dispatch(setMenuIndex(item.index));
               setOpen(false);
             }}
           >
@@ -88,7 +81,7 @@ const MenuSelect = ({
             {item.index == 0 || (
               <DeleteBtn
                 onPress={() => {
-                  setMenuIndex(item.index - 1);
+                  dispatch(setMenuIndex(item.index - 1));
                   dispatch(deleteMenu(item.index));
                 }}
               >
@@ -105,6 +98,10 @@ const MenuSelect = ({
       <HorizontalLine />
       <Menu
         onPress={() => {
+          if (cart[menuIndex].length === 0) {
+            Alert.alert("현재 식단에 식품을 추가하고 이용해보세요");
+            return;
+          }
           if (cart.length > 2) {
             Alert.alert("식단은 3개까지만 추가 가능합니다");
             return;

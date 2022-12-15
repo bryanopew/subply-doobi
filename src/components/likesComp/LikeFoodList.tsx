@@ -9,6 +9,7 @@ import { AppDispatch, RootState } from "~/redux/store";
 import { addProductToMenu, deleteProduct } from "~/redux/slices/cart/cartSlice";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { SCREENWIDTH } from "~/constants/constants";
+import { deleteLikeFood } from "~/redux/slices/like/likeSlice";
 
 const Container = styled.View`
   flex: 1;
@@ -68,15 +69,26 @@ const NutrValue = styled(TextMain)`
 `;
 
 const AddOrDeleteBtn = styled.TouchableOpacity`
-  height: 100%;
   margin-left: 16px;
-  align-self: flex-start;
   /* background-color: ${colors.highlight}; */
 `;
 
 const AddToCartBtnImage = styled.Image`
   width: 24px;
   height: 24px;
+`;
+
+const DeleteLikeFoodBtn = styled.TouchableOpacity`
+  width: 48px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
+  border-width: 1px;
+  border-radius: 5px;
+  border-color: ${colors.inActivated};
+`;
+const DeleteLikeFoodBtnText = styled(TextSub)`
+  font-size: 14px;
 `;
 
 interface IFoodList {
@@ -87,14 +99,18 @@ interface IFoodList {
   };
   menuIndex: number;
 }
-
 const FoodList = ({ item, menuIndex }: IFoodList) => {
   const { cart } = useSelector((state: RootState) => state.cart);
   const dispatch = useDispatch();
   const itemExist = hasProduct(cart[menuIndex], item.item.productNo);
+
+  const deleteFood = () => {
+    dispatch(deleteLikeFood(item.item.productNo));
+  };
+
   return (
     <Container>
-      <Row>
+      <Row style={{ height: 100 }}>
         <Thumbnail
           source={{
             uri: `${BASE_URL}${item.item.mainAttUrl}`,
@@ -111,25 +127,36 @@ const FoodList = ({ item, menuIndex }: IFoodList) => {
           </Col>
           <Price>{item.item?.price}원</Price>
         </ProductInfoContainer>
-        <AddOrDeleteBtn
-          onPress={() => {
-            itemExist
-              ? dispatch(
-                  deleteProduct({ menuIndex, productNo: item.item.productNo })
-                )
-              : dispatch(addProductToMenu({ menuIndex, product: item.item }));
+        <Col
+          style={{
+            height: "100%",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
           }}
         >
-          {itemExist ? (
-            <AddToCartBtnImage
-              source={require(`~/assets/icons/24_foodDelete.png`)}
-            />
-          ) : (
-            <AddToCartBtnImage
-              source={require(`~/assets/icons/24_foodAdd.png`)}
-            />
-          )}
-        </AddOrDeleteBtn>
+          <AddOrDeleteBtn
+            onPress={() => {
+              itemExist
+                ? dispatch(
+                    deleteProduct({ menuIndex, productNo: item.item.productNo })
+                  )
+                : dispatch(addProductToMenu({ menuIndex, product: item.item }));
+            }}
+          >
+            {itemExist ? (
+              <AddToCartBtnImage
+                source={require(`~/assets/icons/24_foodDelete.png`)}
+              />
+            ) : (
+              <AddToCartBtnImage
+                source={require(`~/assets/icons/24_foodAdd.png`)}
+              />
+            )}
+          </AddOrDeleteBtn>
+          <DeleteLikeFoodBtn onPress={deleteFood}>
+            <DeleteLikeFoodBtnText>삭제</DeleteLikeFoodBtnText>
+          </DeleteLikeFoodBtn>
+        </Col>
       </Row>
       <NutrSummaryContainer>
         <Nutr>

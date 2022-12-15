@@ -4,7 +4,7 @@
 // export const BASE_URL = `http://13.125.244.117:8080`;
 export const BASE_URL = `http://15.164.96.218:8080`;
 // >>>>>>> feature/home
-export const TOKEN_CONTROLLER = `${BASE_URL}/api/every/token/get-token`; //토큰 조회
+export const GET_TOKEN = `${BASE_URL}/api/every/token/get-token`; //토큰 조회
 export const GET_AUTH = `${BASE_URL}/api/member/auth/get-auth`; //인증 여부 조회
 export const RE_ISSUE_TOKEN = `${BASE_URL}/api/member/auth/re-issue-token`;
 export const GET_USER = `${BASE_URL}/api/member/user/get-user`; //사용자 정보 조회

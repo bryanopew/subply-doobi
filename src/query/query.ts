@@ -1,13 +1,14 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { KakaoOAuthToken, login } from "@react-native-seoul/kakao-login";
 import axios from "axios";
-import { PRODUCT_LIST, TOKEN_CONTROLLER } from "./urls";
+import { PRODUCT_LIST, GET_TOKEN, GET_AUTH, RE_ISSUE_TOKEN } from "./urls";
 
 // doobi server------------------ //
 // 카카오 토큰으로 DoobiToken 발급
 export const getDoobiToken = async (kakaoAccessToken: string | null) => {
   try {
     console.log("getDoobiToken!");
-    const result = await axios.get(`${TOKEN_CONTROLLER}/${kakaoAccessToken}`);
+    const result = await axios.get(`${GET_TOKEN}/${kakaoAccessToken}`);
     console.log(result.status);
     return result?.status === 200 ? result.data : undefined;
   } catch (e) {
@@ -15,31 +16,72 @@ export const getDoobiToken = async (kakaoAccessToken: string | null) => {
   }
 };
 
-// async ------------------------ //
-// kakaoToken 저장
-
-export const storeKakaoAccessToken = async (accessToken: string) => {
-  try {
-    await AsyncStorage.setItem("KAKAO_ACCESS_TOKEN", accessToken);
-    console.log("storeKakaoToken : ", accessToken);
-  } catch (e) {
-    console.log(e);
-  }
+// asyncStorage ------------------------ //
+export const storeToken = async (
+  accessToken: string,
+  refreshToken?: string
+) => {
+  await AsyncStorage.setItem("ACCESS_TOKEN", accessToken);
+  refreshToken && (await AsyncStorage.setItem("REFRESH_TOKEN", refreshToken));
 };
 
-// AsyncStorage
-export const getKakaoToken = async () => {
-  let token = await AsyncStorage.getItem("KAKAO_ACCESS_TOKEN");
-  console.log("getToken: ", token);
-  return token;
+const getStoredToken = async () => {
+  const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");
+  const refreshToken = await AsyncStorage.getItem("REFRESH_TOKEN");
+  return {
+    accessToken,
+    refreshToken,
+  };
 };
 
 // test data
-export const getTestData = async () => {
+export const validateToken = async () => {
+  let isValid = false;
   try {
-    const { accessToken, refreshToken } = await getKakaoToken().then(
-      (kakaoAccessToken) => getDoobiToken(kakaoAccessToken)
-    );
+    try {
+      const { accessToken, refreshToken } = await getStoredToken();
+      try {
+        const auth = await axios.get(`${GET_AUTH}`, {
+          headers: {
+            authentication: `Bearer ${accessToken}`,
+          },
+        });
+        console.log("auth res: ", auth.data);
+        isValid = true;
+      } catch (e) {
+        console.log(e, "accessToken 만료");
+        const reIssue = await axios.get(`${RE_ISSUE_TOKEN}`, {
+          headers: {
+            authentication: `Bearer ${refreshToken}`,
+          },
+        });
+        await storeToken(reIssue.data.accessToken, reIssue.data.refreshToken);
+        console.log("reIssue res: ", reIssue.data);
+        isValid = true;
+      }
+    } catch (e) {
+      console.log(e, "refresh만료");
+      const kakaoToken: KakaoOAuthToken = await login();
+      const { accessToken, refreshToken } = await getDoobiToken(
+        kakaoToken.accessToken
+      );
+      if (accessToken && refreshToken) {
+        await storeToken(accessToken, refreshToken);
+      }
+      isValid = true;
+    }
+  } catch (e) {
+    console.log(e, "kakao token 발급 오류");
+  }
+  return isValid;
+};
+
+export const getTestData = async () => {
+  const isTokenValid = await validateToken();
+  console.log("getTestData: isTokenValid: ", isTokenValid);
+
+  if (isTokenValid) {
+    const { accessToken, refreshToken } = await getStoredToken();
     const res = await axios.get(
       `${PRODUCT_LIST}?searchText=도시락&categoryCd=&sort`,
       {
@@ -49,7 +91,5 @@ export const getTestData = async () => {
       }
     );
     return res.data.slice(0, 10);
-  } catch (e) {
-    console.log("getTestData error: ", e);
   }
 };

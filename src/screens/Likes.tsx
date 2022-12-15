@@ -1,11 +1,98 @@
-import { View, Text } from "react-native";
-import React from "react";
+import { View, Text, FlatList } from "react-native";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components/native";
+import { getTestData } from "~/query/query";
+import MenuSelect from "~/components/common/MenuSelect";
+import {
+  BtnCTA,
+  BtnText,
+  Container,
+  HorizontalLine,
+  HorizontalSpace,
+  Row,
+  TextMain,
+  TextSub,
+} from "~/styles/styledConsts";
+import MenuHeader from "~/components/common/MenuHeader";
+import NutrientsProgress from "~/components/common/NutrientsProgress";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "~/redux/store";
+import FoodList from "~/components/homeComp/FoodList";
+import { IProduct } from "~/constants/constants";
+import LikeFoodList from "~/components/likesComp/LikeFoodList";
+import { setLikeFoods } from "~/redux/slices/like/likeSlice";
+
+const MenuSelectContainer = styled.View`
+  width: 100%;
+  height: 48px;
+  justify-content: center;
+`;
+
+const ListTitle = styled(TextMain)`
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+const NoOfFoods = styled(TextSub)`
+  font-size: 16px;
+`;
 
 const Likes = () => {
+  // redux
+  const { menuIndex } = useSelector((state: RootState) => state.cart);
+  const { likeFoods } = useSelector((state: RootState) => state.like);
+  const dispatch = useDispatch();
+  // test data
+  const [menuSelectOpen, setMenuSelectOpen] = useState(false);
+
+  // useEffect(() => {
+  //   // 처음 렌더링 때 서버에서 likes 가져와서 useState로 관리
+  //   // like 식품 삭제시에는 서버에서 delete + state에서 제거
+  //   // 식품 상세페이지에서 찜 누르면 서버에 저장시켜서 like page 왔을 때 어차피 다시 렌더링
+  //   // like page에서 상세페이지 갔다가 찜 누르고 뒤로가기 버튼으로 돌아온 경우는???????
+  //   const getLikeData = async () => {
+  //     const res = await getTestData();
+  //     setLikeData(res);
+  //   };
+  //   getLikeData();
+  // }, []);
+
   return (
-    <View>
-      <Text>Like</Text>
-    </View>
+    <Container>
+      <MenuSelectContainer>
+        <MenuHeader
+          menuSelectOpen={menuSelectOpen}
+          setMenuSelectOpen={setMenuSelectOpen}
+        />
+      </MenuSelectContainer>
+      <NutrientsProgress menuIndex={menuIndex} />
+      <Row style={{ marginTop: 32 }}>
+        <ListTitle>찜한 상품</ListTitle>
+        <NoOfFoods>{likeFoods?.length}</NoOfFoods>
+      </Row>
+      <HorizontalLine style={{ marginTop: 8 }} />
+      <FlatList
+        style={{ marginTop: 24 }}
+        data={likeFoods}
+        renderItem={(item) => (
+          <LikeFoodList item={item} menuIndex={menuIndex} />
+        )}
+        ItemSeparatorComponent={() => <HorizontalSpace height={16} />}
+        keyExtractor={(item) => item.productNo}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 80 }}
+      />
+      {menuSelectOpen && <MenuSelect setOpen={setMenuSelectOpen} />}
+      <BtnCTA
+        btnStyle="activated"
+        onPress={async () => {
+          const res = await getTestData();
+          dispatch(setLikeFoods(res));
+        }}
+      >
+        <BtnText>테스트 데이터</BtnText>
+      </BtnCTA>
+    </Container>
   );
 };
 

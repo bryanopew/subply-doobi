@@ -100,6 +100,17 @@ export const userInfoSlice = createSlice({
       const isNutrChange = calorie && carb && protein && fat;
       if (isWeightChange && isNutrChange) {
         console.log("updateUserInfo: 몸무게 -> 자동계산");
+        // state = {
+        //   ...state,
+        //   userInfo: {
+        //     ...state.userInfo,
+        //     // 변경
+        //   },
+        //   userTarget: {
+        //     ...state.userTarget,
+        //     // 변경
+        //   }
+        // }
         state.userInfo = {
           ...state.userInfo,
           weight: weight,

@@ -225,3 +225,30 @@ export interface IFormField {
     value: string;
   };
 }
+
+export interface IProduct {
+  // productNo: string;
+  // platformNm: string;
+  // itemReportNo: string;
+  // categoryNm: string;
+  // subCategoryNm: string;
+  // productNm: string;
+  // calorie: string;
+  // sodium: string;
+  // carb: string;
+  // sugar: string;
+  // fiber: string;
+  // protein: string;
+  // fat: string;
+  // cholesterol: string;
+  // transFat: string;
+  // saturatedFat: string;
+  // price: string;
+  // minQty: string;
+  // shippingPrice: string;
+  // freeShippingPrice: string;
+  // freeShippingYn: string;
+  // mainAttUrl: string;
+  // subAttUrl: string;
+  [key: string]: string;
+}
