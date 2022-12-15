@@ -7,6 +7,7 @@ import Home from "~/screens/Home";
 import Mypage from "~/screens/Mypage";
 import Cart from "~/screens/Cart";
 import Likes from "~/screens/Likes";
+import colors from "~/styles/colors";
 
 const Tab = createBottomTabNavigator();
 
@@ -15,14 +16,21 @@ const BottomTabIcon = styled.Image`
   height: 36px;
 `;
 
+const BackArrow = styled.Image`
+  margin-left: 16px;
+  width: 24px;
+  height: 24px;
+`;
+
 const BottomTab = () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{ headerShown: false, tabBarShowLabel: false }}
+    >
       <Tab.Screen
         name="Home"
         component={Home}
         options={{
-          headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
               <BottomTabIcon
@@ -33,14 +41,12 @@ const BottomTab = () => {
                 source={require(`~/assets/icons/36_mainPage.png`)}
               />
             ),
-          tabBarShowLabel: false,
         }}
       />
       <Tab.Screen
         name="Mypage"
         component={Mypage}
         options={{
-          headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
               <BottomTabIcon
@@ -51,7 +57,6 @@ const BottomTab = () => {
                 source={require(`~/assets/icons/36_profilePage.png`)}
               />
             ),
-          tabBarShowLabel: false,
         }}
       />
       <Tab.Screen
@@ -68,7 +73,17 @@ const BottomTab = () => {
                 source={require(`~/assets/icons/36_likePage.png`)}
               />
             ),
-          tabBarShowLabel: false,
+          headerShown: true,
+          headerTitle: "찜한 상품",
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontSize: 18,
+            fontWeight: "bold",
+            color: colors.textMain,
+          },
+          headerLeft: () => (
+            <BackArrow source={require(`~/assets/icons/24_back.png`)} />
+          ),
         }}
       />
       <Tab.Screen
@@ -85,7 +100,7 @@ const BottomTab = () => {
                 source={require(`~/assets/icons/36_cartPage.png`)}
               />
             ),
-          tabBarShowLabel: false,
+          headerShown: true,
         }}
       />
     </Tab.Navigator>

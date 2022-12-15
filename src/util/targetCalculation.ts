@@ -1,10 +1,10 @@
 import {
+  IProduct,
   purposeCdToValue,
   ratioCdToValue,
   timeCdToMinutes,
 } from "~/constants/constants";
 
-import { IProduct } from "~/redux/slices/cart/cartSlice";
 import { IUserTarget } from "~/redux/slices/userInfo/userInfoSlice";
 
 /** gender, age, height, weight  => BMR */

@@ -1,39 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { getProductIndex, hasProduct } from "~/util/reduxUtil";
+import { IProduct } from "~/constants/constants";
 
-export interface IProduct {
-  // productNo: string;
-  // platformNm: string;
-  // itemReportNo: string;
-  // categoryNm: string;
-  // subCategoryNm: string;
-  // productNm: string;
-  // calorie: string;
-  // sodium: string;
-  // carb: string;
-  // sugar: string;
-  // fiber: string;
-  // protein: string;
-  // fat: string;
-  // cholesterol: string;
-  // transFat: string;
-  // saturatedFat: string;
-  // price: string;
-  // minQty: string;
-  // shippingPrice: string;
-  // freeShippingPrice: string;
-  // freeShippingYn: string;
-  // mainAttUrl: string;
-  // subAttUrl: string;
-  [key: string]: string;
-}
 // cart -> menu -> product
 export interface ICartState {
+  menuIndex: number;
   cart: Array<Array<IProduct>>;
 }
 
 const initialState: ICartState = {
+  menuIndex: 0,
   cart: [[]],
 };
 
@@ -41,6 +18,9 @@ export const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
+    setMenuIndex: (state, action: PayloadAction<number>) => {
+      state.menuIndex = action.payload;
+    },
     addProductToMenu: (
       state,
       action: PayloadAction<{
@@ -75,6 +55,11 @@ export const cartSlice = createSlice({
   },
 });
 
-export const { addProductToMenu, deleteProduct, addMenuToCart, deleteMenu } =
-  cartSlice.actions;
+export const {
+  setMenuIndex,
+  addProductToMenu,
+  deleteProduct,
+  addMenuToCart,
+  deleteMenu,
+} = cartSlice.actions;
 export default cartSlice.reducer;

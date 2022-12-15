@@ -17,29 +17,17 @@ import { addProductToMenu, deleteProduct } from "~/redux/slices/cart/cartSlice";
 import NutrientsProgress from "~/components/common/NutrientsProgress";
 import colors from "~/styles/colors";
 import { FlatList, Text, View } from "react-native";
-import { getTestData } from "~/query/query";
+import { getTestData, validateToken } from "~/query/query";
 import FoodList from "~/components/homeComp/FoodList";
-import MenuSelect from "~/components/homeComp/MenuSelect";
+import MenuSelect from "~/components/common/MenuSelect";
+import MenuHeader from "~/components/common/MenuHeader";
+import { IProduct } from "~/constants/constants";
 
 const MenuAndSearchBox = styled.View`
   flex-direction: row;
   width: 100%;
   height: 48px;
   align-items: center;
-`;
-
-const MenuHeader = styled.TouchableOpacity`
-  flex-direction: row;
-`;
-
-const HeaderText = styled(TextMain)`
-  font-size: 18px;
-  font-weight: bold;
-`;
-
-const Arrow = styled.Image`
-  width: 24px;
-  height: 24px;
 `;
 
 const SearchInput = styled.TextInput`
@@ -90,37 +78,29 @@ const Home = () => {
   const { userInfo, userTarget } = useSelector(
     (state: RootState) => state.userInfo
   );
-  const { cart } = useSelector((state: RootState) => state.cart);
+  const { menuIndex, cart } = useSelector((state: RootState) => state.cart);
   const dispatch = useDispatch();
 
   // state
-  const [menuIndex, setMenuIndex] = useState(0);
   const [searchText, setSearchText] = useState("");
-  const [testData, setTestData] = useState([]);
+  const [testData, setTestData] = useState<Array<IProduct>>([]);
   const [menuSelectOpen, setMenuSelectOpen] = useState(false);
 
-  console.log("Home: cartLength: ", cart.length);
-
-  useEffect(() => {
-    const getInitialFoods = async () => {
-      const res = await getTestData();
-      setTestData(res);
-    };
-    getInitialFoods();
-  }, []);
+  // useEffect(() => {
+  //   const getInitialFoods = async () => {
+  //     const res = await getTestData();
+  //     setTestData(res);
+  //   };
+  //   getInitialFoods();
+  // }, []);
 
   return (
     <Container>
       <MenuAndSearchBox>
-        {/* <MenuSelect menuIndex={menuIndex} setMenuIndex={setMenuIndex} /> */}
-        <MenuHeader onPress={() => setMenuSelectOpen((v) => !v)}>
-          <HeaderText>{`식단${menuIndex + 1}`}</HeaderText>
-          {menuSelectOpen ? (
-            <Arrow source={require(`~/assets/icons/24_dropdown_up.png`)} />
-          ) : (
-            <Arrow source={require(`~/assets/icons/24_dropdown_down.png`)} />
-          )}
-        </MenuHeader>
+        <MenuHeader
+          menuSelectOpen={menuSelectOpen}
+          setMenuSelectOpen={setMenuSelectOpen}
+        />
         <SearchInput
           onChangeText={setSearchText}
           value={searchText}
@@ -166,20 +146,14 @@ const Home = () => {
       <BtnCTA
         btnStyle="activated"
         onPress={async () => {
-          const res = await getTestData();
+          const isValid = await validateToken();
+          const res = isValid && (await getTestData());
           setTestData(res);
         }}
       >
         <BtnText>테스트 데이터</BtnText>
       </BtnCTA>
-      {menuSelectOpen && (
-        <MenuSelect
-          menuIndex={menuIndex}
-          setMenuIndex={setMenuIndex}
-          open={menuSelectOpen}
-          setOpen={setMenuSelectOpen}
-        />
-      )}
+      {menuSelectOpen && <MenuSelect setOpen={setMenuSelectOpen} />}
     </Container>
   );
 };

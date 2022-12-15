@@ -1,4 +1,4 @@
-import { IProduct } from "~/redux/slices/cart/cartSlice";
+import { IProduct } from "~/constants/constants";
 
 export const hasProduct = (menu: Array<IProduct>, productNo: string) => {
   const arrOfProductNo = menu.map((product) => product.productNo);

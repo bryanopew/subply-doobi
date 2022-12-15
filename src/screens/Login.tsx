@@ -9,8 +9,13 @@ import {
   logout,
 } from "@react-native-seoul/kakao-login";
 import axios from "axios";
-import { TOKEN_CONTROLLER } from "~/query/urls";
-import { storeKakaoAccessToken } from "~/query/query";
+import { GET_TOKEN } from "~/query/urls";
+import {
+  getDoobiToken,
+  storeKakaoAccessToken,
+  storeToken,
+  validateToken,
+} from "~/query/query";
 import { NavigationProps } from "~/constants/constants";
 
 const Container = styled.View`
@@ -47,21 +52,14 @@ const Login = ({ navigation: { navigate } }: NavigationProps) => {
   // 실제 로그인. 테스트때만 주석처리
   const signInWithKakao = async (): Promise<void> => {
     // TBD: 서버에 로그인 정보 (!!!닉네임!!!, 키 몸무게 등)있으면 redux-state에 저장 후
+    // or 서버말고 asyncStorage에서 확인하고 있으면 redux에 저장 후
     // 바로 메인페이지로 이동시키기
     // TBD: ios 로그인 설정
-
-    const token: KakaoOAuthToken = await login();
-    const kakaoAccessToken = token.accessToken;
-
-    console.log("signInWithKakao: login!");
-    console.log(kakaoAccessToken);
-    await storeKakaoAccessToken(kakaoAccessToken);
-    if (kakaoAccessToken) {
+    const isTokenValid = await validateToken();
+    if (isTokenValid) {
       navigate("Stacks", { screen: "UserInfo1" });
-    } else {
-      console.log("토큰발급 오류");
     }
-    // 메인페이지 이동
+    //메인페이지 이동
   };
 
   return (
