@@ -1,4 +1,4 @@
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { getTestData } from "~/query/query";
@@ -6,6 +6,7 @@ import MenuSelect from "~/components/common/MenuSelect";
 import {
   BtnCTA,
   BtnText,
+  Col,
   Container,
   HorizontalLine,
   HorizontalSpace,
@@ -21,6 +22,7 @@ import FoodList from "~/components/homeComp/FoodList";
 import { IProduct } from "~/constants/constants";
 import LikeFoodList from "~/components/likesComp/LikeFoodList";
 import { setLikeFoods } from "~/redux/slices/like/likeSlice";
+import colors from "~/styles/colors";
 
 const MenuSelectContainer = styled.View`
   width: 100%;
@@ -44,8 +46,9 @@ const Likes = () => {
   const dispatch = useDispatch();
   // test data
   const [menuSelectOpen, setMenuSelectOpen] = useState(false);
+  // console.log("likeFoods: ", likeFoods);
 
-  // useEffect(() => {
+  // useEffect(() =>  {
   //   // 처음 렌더링 때 서버에서 likes 가져와서 useState로 관리
   //   // like 식품 삭제시에는 서버에서 delete + state에서 제거
   //   // 식품 상세페이지에서 찜 누르면 서버에 저장시켜서 like page 왔을 때 어차피 다시 렌더링
@@ -71,9 +74,10 @@ const Likes = () => {
         <NoOfFoods>{likeFoods?.length}</NoOfFoods>
       </Row>
       <HorizontalLine style={{ marginTop: 8 }} />
-      <FlatList
+      {/* 여기 이상함 ㅠㅠ */}
+      {/* <FlatList
         style={{ marginTop: 24 }}
-        data={likeFoods}
+        data={temp}
         renderItem={(item) => (
           <LikeFoodList item={item} menuIndex={menuIndex} />
         )}
@@ -81,8 +85,18 @@ const Likes = () => {
         keyExtractor={(item) => item.productNo}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 80 }}
-      />
-      {menuSelectOpen && <MenuSelect setOpen={setMenuSelectOpen} />}
+      /> */}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <HorizontalSpace height={24} />
+        {likeFoods.map((food, index) => {
+          return (
+            <Col>
+              <LikeFoodList item={{ item: food }} menuIndex={menuIndex} />
+              {likeFoods.length !== index && <HorizontalSpace height={16} />}
+            </Col>
+          );
+        })}
+      </ScrollView>
       <BtnCTA
         btnStyle="activated"
         onPress={async () => {
@@ -92,6 +106,7 @@ const Likes = () => {
       >
         <BtnText>테스트 데이터</BtnText>
       </BtnCTA>
+      {menuSelectOpen && <MenuSelect setOpen={setMenuSelectOpen} />}
     </Container>
   );
 };

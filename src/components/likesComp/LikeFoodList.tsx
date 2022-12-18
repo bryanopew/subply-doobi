@@ -10,6 +10,7 @@ import { addProductToMenu, deleteProduct } from "~/redux/slices/cart/cartSlice";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { SCREENWIDTH } from "~/constants/constants";
 import { deleteLikeFood } from "~/redux/slices/like/likeSlice";
+import { Text, TouchableOpacity } from "react-native";
 
 const Container = styled.View`
   flex: 1;
@@ -100,11 +101,13 @@ interface IFoodList {
   menuIndex: number;
 }
 const FoodList = ({ item, menuIndex }: IFoodList) => {
+  // redux
   const { cart } = useSelector((state: RootState) => state.cart);
+  const { likeFoods } = useSelector((state: RootState) => state.like);
   const dispatch = useDispatch();
   const itemExist = hasProduct(cart[menuIndex], item.item.productNo);
-
   const deleteFood = () => {
+    console.log("deleteFood: productNo: ", item.item.productNo);
     dispatch(deleteLikeFood(item.item.productNo));
   };
 

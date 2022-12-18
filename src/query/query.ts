@@ -34,13 +34,17 @@ const getStoredToken = async () => {
   };
 };
 
-// test data
+/** 토큰 만료되었으면 재발급받거나 or 카카오로그인 후
+ * 유효한 토큰을 발급받아 다시 저장 후 성공/실패 반환
+ * @return  토큰 재발급 성공 / 실패
+ */
 export const validateToken = async () => {
   let isValid = false;
   try {
     try {
       const { accessToken, refreshToken } = await getStoredToken();
       try {
+        // 인증여부 조회
         const auth = await axios.get(`${GET_AUTH}`, {
           headers: {
             authentication: `Bearer ${accessToken}`,
@@ -50,6 +54,7 @@ export const validateToken = async () => {
         isValid = true;
       } catch (e) {
         console.log(e, "accessToken 만료");
+        // 토큰 재발급
         const reIssue = await axios.get(`${RE_ISSUE_TOKEN}`, {
           headers: {
             authentication: `Bearer ${refreshToken}`,
@@ -61,6 +66,7 @@ export const validateToken = async () => {
       }
     } catch (e) {
       console.log(e, "refresh만료");
+      // 카카오로그인
       const kakaoToken: KakaoOAuthToken = await login();
       const { accessToken, refreshToken } = await getDoobiToken(
         kakaoToken.accessToken
@@ -90,6 +96,6 @@ export const getTestData = async () => {
         },
       }
     );
-    return res.data.slice(0, 10);
+    return res.data.slice(0, 3);
   }
 };

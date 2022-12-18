@@ -21,8 +21,9 @@ export const likeSlice = createSlice({
     addLikeFood: (state, action: PayloadAction<Array<IProduct>>) => {
       [...state.likeFoods, action.payload];
     },
+    // payload: food productNo
     deleteLikeFood: (state, action: PayloadAction<string>) => {
-      console.log(action.type);
+      // console.log("actionType: ", action.type);
       if (hasProduct(state.likeFoods, action.payload)) {
         const productIndex = getProductIndex(state.likeFoods, action.payload);
         state.likeFoods.splice(productIndex, 1);
