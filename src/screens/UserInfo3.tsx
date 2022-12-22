@@ -76,7 +76,7 @@ const UserInfo3 = ({ navigation: { navigate } }: NavigationProps) => {
     setValue,
     formState: { errors, isValid },
   } = useForm<IFormData>({
-    // 나중에 사용자 정보 있으면 초기값으로 넣어줘야함.
+    // TBD | 나중에 사용자 정보 있으면 초기값으로 넣어줘야함.
     defaultValues: {
       ratioType: nutrRatioCategory[0].value,
       caloriePerMeal: "",
@@ -96,11 +96,11 @@ const UserInfo3 = ({ navigation: { navigate } }: NavigationProps) => {
   const [activeSections, setActiveSections] = useState<number[]>([]);
   const CONTENT = [
     {
-      title: <Text>귀찮다 두비가 알아서 다해줘</Text>,
+      title: "귀찮다 두비가 알아서 다해줘",
       content: <Auto />,
     },
     {
-      title: <Text>탄:단:지 비율로 계산하기</Text>,
+      title: "탄:단:지 비율로 계산하기",
       content: (
         <CalculateByRatio
           ratioType={ratioType}
@@ -114,7 +114,7 @@ const UserInfo3 = ({ navigation: { navigate } }: NavigationProps) => {
       ),
     },
     {
-      title: <Text>각 영양성분 직접 입력 (고수용)</Text>,
+      title: "각 영양성분 직접 입력 (고수용)",
       content: (
         <Manual
           carbManual={carbManual}

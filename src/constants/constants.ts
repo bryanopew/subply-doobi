@@ -207,6 +207,24 @@ export const validationRules: IValidationRules = {
             `한 끼에 ${v}g은 안돼요 ㅠㅠ`,
     },
   },
+  orderer: {
+    required: "주문하는 분 성함을 알려주세요",
+  },
+  ordererContact: {
+    required: "주문하는 분 연락처를 알려주세요",
+  },
+  addressDetail: {
+    required: "상세주소를 입력해주세요",
+  },
+  receiver: {
+    required: "받는 분 성함을 알려주세요",
+  },
+  receiverContact: {
+    required: "받는 분 연락처를 알려주세요",
+  },
+  paymentMethod: {
+    required: "결제수단을 선택해주세요",
+  },
 };
 
 // type
@@ -214,6 +232,7 @@ export const validationRules: IValidationRules = {
 export interface NavigationProps {
   navigation: {
     navigate: Function;
+    setOptions: Function;
   };
   route?: any;
 }

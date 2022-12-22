@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "~/screens/Login";
@@ -6,14 +6,21 @@ import UserInfo1 from "~/screens/UserInfo1";
 import styled from "styled-components/native";
 import UserInfo2 from "~/screens/UserInfo2";
 import UserInfo3 from "~/screens/UserInfo3";
+import AddressEdit from "~/screens/AddressEdit";
+import { NavigationProps } from "~/constants/constants";
 
 const StepIcon = styled.Image`
   width: 36px;
   height: 36px;
 `;
 
+const BackArrow = styled.Image`
+  width: 24px;
+  height: 24px;
+`;
+
 const Stack = createNativeStackNavigator();
-const Stacks = () => {
+const Stacks = ({ navigation: { navigate } }: NavigationProps) => {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -52,6 +59,26 @@ const Stacks = () => {
           headerTitle: "",
           headerRight: () => (
             <StepIcon source={require("~/assets/icons/36_step3.png")} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="AddressEdit"
+        component={AddressEdit}
+        options={{
+          headerTitle: "배송지 수정",
+          headerTitleAlign: "center",
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() =>
+                navigate("MyPageStacks", {
+                  screen: "Orders",
+                  params: { from: "AddressEdit" },
+                })
+              }
+            >
+              <BackArrow source={require(`~/assets/icons/24_back.png`)} />
+            </TouchableOpacity>
           ),
         }}
       />

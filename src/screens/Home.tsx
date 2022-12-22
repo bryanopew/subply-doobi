@@ -21,7 +21,7 @@ import { getTestData, validateToken } from "~/query/query";
 import FoodList from "~/components/homeComp/FoodList";
 import MenuSelect from "~/components/common/MenuSelect";
 import MenuHeader from "~/components/common/MenuHeader";
-import { IProduct } from "~/constants/constants";
+import { IProduct, NavigationProps } from "~/constants/constants";
 
 const MenuAndSearchBox = styled.View`
   flex-direction: row;
@@ -73,7 +73,7 @@ const FilterBtnText = styled(TextMain)`
   font-size: 14px;
 `;
 
-const Home = () => {
+const Home = ({ navigation: { navigate } }: NavigationProps) => {
   // redux
   const { userInfo, userTarget } = useSelector(
     (state: RootState) => state.userInfo
@@ -152,6 +152,14 @@ const Home = () => {
         }}
       >
         <BtnText>테스트 데이터</BtnText>
+      </BtnCTA>
+      <BtnCTA
+        btnStyle="activated"
+        onPress={async () => {
+          navigate("MyPageStacks", { screen: "Orders" });
+        }}
+      >
+        <BtnText>테스트 구매</BtnText>
       </BtnCTA>
       {menuSelectOpen && <MenuSelect setOpen={setMenuSelectOpen} />}
     </Container>

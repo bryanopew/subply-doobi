@@ -34,6 +34,11 @@ export const UserInfoTextInput = styled.TextInput`
     isActivated ? colors.main : colors.inActivated};
 `;
 
+export const InputHeader = styled(InputHeaderText)`
+  margin-top: 24px;
+`;
+export const Input = styled(UserInfoTextInput)``;
+
 export const ErrorText = styled.Text`
   font-size: 16px;
   color: #ffffff;
@@ -53,10 +58,11 @@ export const ErrorBox = styled.View`
 `;
 
 export const AccordionContentContainer = styled.View`
-  width: ${`${SCREENWIDTH}px`};
+  /* width: ${`${SCREENWIDTH}px`}; */
+  width: 100%;
   height: auto;
   background-color: ${colors.white};
-  padding: 0px 16px 0px 16px;
+  padding: 0px 16px 32px 16px;
 `;
 
 export const InputContainer = styled.View`
