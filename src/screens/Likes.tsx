@@ -90,7 +90,7 @@ const Likes = () => {
         <HorizontalSpace height={24} />
         {likeFoods.map((food, index) => {
           return (
-            <Col>
+            <Col key={index}>
               <LikeFoodList item={{ item: food }} menuIndex={menuIndex} />
               {likeFoods.length !== index && <HorizontalSpace height={16} />}
             </Col>

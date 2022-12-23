@@ -83,7 +83,7 @@ const AddressEdit = ({
     orderInfo: { address },
   } = useSelector((state: RootState) => state.order);
 
-  const [showDetails, setShowDetails] = useState(!route.params.isCreate);
+  const [showDetails, setShowDetails] = useState(!isCreate);
   const [modalVisible, setModalVisible] = useState(false);
   const [postalCode, setPostalCode] = useState("");
   const [addressBase, setAddressBase] = useState("");
@@ -96,7 +96,7 @@ const AddressEdit = ({
     formState: { errors, isValid },
   } = useForm<{ addressDetail: string }>({
     defaultValues: {
-      addressDetail: isCreate ? "" : address[currentAddressId].detail,
+      addressDetail: isCreate ? "" : address[currentAddressId]?.detail,
     },
   });
   const addressDetailValue = useWatch({ control, name: "addressDetail" });
@@ -142,6 +142,11 @@ const AddressEdit = ({
                 onPress={() => {
                   Alert.alert("해당 주소를 삭제합니다");
                   dispatch(deleteAddress(currentAddressId));
+                  dispatch(
+                    setSelectedAddressId(
+                      currentAddressId === 0 ? 0 : currentAddressId - 1
+                    )
+                  );
                   navigate("MyPageStacks", {
                     screen: "Orders",
                     params: { from: "AddressEdit" },
@@ -172,7 +177,7 @@ const AddressEdit = ({
         }}
       >
         <BtnText style={{ color: colors.textSub, fontSize: 16 }}>
-          {isCreate ? `주소 추가` : `주소 전체변경`}
+          {showDetails ? `주소 전체변경` : `주소 추가`}
         </BtnText>
       </AddressEditBtn>
       <AddressConfirmBtn

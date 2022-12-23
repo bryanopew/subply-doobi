@@ -5,16 +5,12 @@ import { Col, Row, TextMain, TextSub } from "~/styles/styledConsts";
 import { BASE_URL } from "~/query/urls";
 import { hasProduct } from "~/util/reduxUtil";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "~/redux/store";
+import { RootState } from "~/redux/store";
 import { addProductToMenu, deleteProduct } from "~/redux/slices/cart/cartSlice";
-import { PayloadAction } from "@reduxjs/toolkit";
 import { SCREENWIDTH } from "~/constants/constants";
 import { deleteLikeFood } from "~/redux/slices/like/likeSlice";
-import { Text, TouchableOpacity } from "react-native";
 
-const Container = styled.View`
-  flex: 1;
-`;
+const Container = styled.View``;
 
 const Thumbnail = styled.Image`
   width: 100px;
